@@ -1,0 +1,155 @@
+#app {
+    width: 100%;
+    height: 100%;
+}
+
+.Building-cost {
+    background-color: rgba(227, 0, 0, 0.855);
+}
+
+.Building-cost:hover {
+    background-color: rgba(185, 1, 1, 0.838);
+}
+
+.Building-buy {
+    background-color: rgb(1, 218, 27);
+}
+
+.Building-buy:hover {
+    background-color: rgba(0, 189, 0, 0.9);
+}
+
+#tabs {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#tab {
+    width: 150px;
+    height: 30px;
+    padding: 5px;
+    background-color: rgba(74, 74, 74, 0.801);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content {
+    display: none;
+}
+
+.content.active {
+    display: block;
+} 
+
+#s-text,
+#v-text {
+    font-weight: bold;
+}
+
+#Themes {
+    position: absolute;
+    width: 600px;
+    height: 400px;
+    top: 50%;
+    left: 50%;
+    margin-left: -300px;
+    margin-top: -200px;
+    background-color: rgba(152, 152, 152, 0.858);
+}
+
+.Themes {
+    display: none;
+}
+
+.Themes.active {
+    display: block;
+}
+
+#close-theme {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#ms-t {
+    font-weight: bolder;
+    font-size: 18px;
+}
+
+#Equation {
+    display: none;
+}
+
+#Equation.unlocked {
+    display: block;
+}
+
+#up-t {
+    font-size: 25px;
+    font-weight: bolder;
+}
+
+.Up-cost {
+    width: 300px;
+    height: 130px;
+    background-color: rgba(227, 0, 0, 0.855);
+    font-size: 13px;
+}
+
+.Up-cost:hover {
+    background-color: rgba(185, 1, 1, 0.838);
+}
+
+.Up-buy {
+    width: 300px;
+    height: 130px;
+    background-color: rgb(1, 218, 27);
+    font-size: 13px;
+}
+
+.Up-buy:hover {
+    background-color: rgba(0, 189, 0, 0.9);
+}
+
+#row1 {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.Achv {
+    width: 150px;
+    height: 150px;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: rgba(227, 0, 0, 0.855);
+    color: black;
+    border: 2px solid black;
+    padding: 2px;
+}
+
+.Achv.completed {
+    background-color: rgb(1, 218, 27);
+}
+
+#Save-notification {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 200px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+#Save-notification.save {
+    display: block;
+}
