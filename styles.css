@@ -87,6 +87,14 @@
     display: block;
 }
 
+#Equation2 {
+    display: none;
+}
+
+#Equation2.unlocked {
+    display: block;
+}
+
 #up-t {
     font-size: 25px;
     font-weight: bolder;
@@ -103,6 +111,17 @@
     background-color: rgba(185, 1, 1, 0.838);
 }
 
+.Up-bought {
+    width: 300px;
+    height: 130px;
+    background-color: rgb(1, 59, 218);
+    font-size: 13px;
+}
+
+.Up-bought:hover {
+    background-color: rgba(0, 38, 142, 0.9);
+}
+
 .Up-buy {
     width: 300px;
     height: 130px;
@@ -115,6 +134,16 @@
 }
 
 #row1 {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+#row2 {
+    display: none;
+}
+
+#row2.show {
     display: flex;
     justify-content: center;
     gap: 5px;
@@ -138,6 +167,24 @@
     background-color: rgb(1, 218, 27);
 }
 
+#achv-row1 {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+#achv-row2 {
+    display: none;
+}
+
+#achv-row2.unlocked {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
 #Save-notification {
     position: absolute;
     right: 0;
@@ -152,4 +199,13 @@
 
 #Save-notification.save {
     display: block;
+}
+
+#Building {
+    width: 300px;
+    height: auto;
+    padding-bottom: 5px;
+    font-size: 17px;
+    background-color: rgba(227, 0, 0, 0.855);
+    position: relative;
 }

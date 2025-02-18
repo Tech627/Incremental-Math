@@ -39,6 +39,20 @@ let upgrades = {
     up3: {
         bought: false,
         cost: new Decimal(3.5e5),
+    },
+    up4: {
+        bought: false,
+        cost: new Decimal(3e6),
+        eff: new Decimal(1),
+    },
+    up5: {
+        bought: false,
+        cost: new Decimal(5e7),
+        eff: new Decimal(1),
+    },
+    up6: {
+        bought: false,
+        cost: new Decimal(2.5e9),
     }
 }
 
@@ -47,8 +61,18 @@ let equations = {
         eff: new Decimal(1),
         x: new Decimal(1),
     },
+    equation2: {
+        eff: new Decimal(1),
+        k: new Decimal(1),
+        x: new Decimal(0),
+        n: new Decimal(1),
+        y: new Decimal(1)
+    },  
     multiplicator1: {
-        cost: new Decimal(5000),
+        cost: new Decimal(5e5),
+    },
+    xbuyer: {
+        cost: new Decimal(1e12),
     }
 }
 
@@ -68,8 +92,20 @@ let achievements = {
     achv5: {
         completed: false
     },
+    achv6: {
+        completed: false
+    },
+    achv7: {
+        completed: false
+    },
+    achv8: {
+        completed: false
+    },
+    achv9: {
+        completed: false
+    },
 }
-
+console.log(achievements.achv5.completed)
 function GetPoints() {
     player.points = player.points.add(1)
     player.tpoints = player.tpoints.add(1)
@@ -105,9 +141,17 @@ function BuyProfessor() {
 function BuyMultiplication() {
     if(player.points.gte(equations.multiplicator1.cost)) {
         player.points = player.points.sub(equations.multiplicator1.cost)
-        equations.multiplicator1.cost = equations.multiplicator1.cost.mul(1.5)
+        equations.multiplicator1.cost = equations.multiplicator1.cost.mul(3.5)
         equations.equation1.x = equations.equation1.x.mul(2)
         equations.equation1.eff = equations.equation1.eff.mul(2)
+    }
+}
+
+function BuyXBuyer() {
+    if(player.points.gte(equations.xbuyer.cost)) {
+        player.points = player.points.sub(equations.xbuyer.cost)
+        equations.equation2.x = equations.equation2.x.add(1)
+        equations.xbuyer.cost = equations.xbuyer.cost.mul(15)
     }
 }
 
@@ -129,5 +173,26 @@ function BuyUp3() {
     if(player.points.gte(upgrades.up3.cost) && upgrades.up3.bought === false) {
         player.points = player.points.sub(upgrades.up3.cost)
         upgrades.up3.bought = true
+    }
+}
+
+function BuyUp4() {
+    if(player.points.gte(upgrades.up4.cost) && upgrades.up4.bought === false) {
+        player.points = player.points.sub(upgrades.up4.cost)
+        upgrades.up4.bought = true
+    }
+}
+
+function BuyUp5() {
+    if(player.points.gte(upgrades.up5.cost) && upgrades.up5.bought === false) {
+        player.points = player.points.sub(upgrades.up5.cost)
+        upgrades.up5.bought = true
+    }
+}
+
+function BuyUp6() {
+    if(player.points.gte(upgrades.up6.cost) && upgrades.up6.bought === false) {
+        player.points = player.points.sub(upgrades.up6.cost)
+        upgrades.up6.bought = true
     }
 }

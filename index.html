@@ -23,35 +23,56 @@
         <button class="btn btn-secondary" id="btn-gain" onclick="GetPoints()"> +1 Points </button>
     </div>
     <div class="content">
-        <div class="container">
-            <div class="container" id="Building">
-                <div class="text-center h5" id="building-amount"> Classmate [0] ~ +0 Points/sec </div>
-                <div class="text-center h5"> gives +1 Point/sec </div>
-                <div class="text-center">
-                    <button class="Building-cost" id="Building-cost" onclick="BuyClassmate()"> Cost: 10 Points </button>
+        <div class="container pt-5">
+            <div class="container d-flex justify-content-center">
+                <div class="container" id="Building">
+                    <div class="text-center h5" id="building-amount"> Classmate [0] </div>
+                    <div class="text-center h6" id="building-production"> (+0 Points/sec) </div>
+                    <div class="text-center h5" id="building-prod"> gives +1 Point/sec </div>
+                    <div class="text-center">
+                        <button class="Building-cost" id="Building-cost" onclick="BuyClassmate()"> Cost: 10 Points </button>
+                    </div>
+                </div>
+                <div class="container" id="Building">
+                    <div class="text-center h5" id="building-amount2"> Teacher [0] </div>
+                    <div class="text-center h6" id="building-production2"> (+0 Points/sec) </div>
+                    <div class="text-center h5" id="building-prod2"> gives +20 Point/sec </div>
+                    <div class="text-center">
+                        <button class="Building-cost" id="Building-cost2" onclick="BuyTeacher()"> Cost: 150 Points </button>
+                    </div>
+                </div>
+                <div class="container" id="Building">
+                    <div class="text-center h5" id="building-amount3"> Professor [0] </div>
+                    <div class="text-center h6" id="building-production3"> (+0 Points/sec) </div>
+                    <div class="text-center h5" id="building-prod3"> gives +150 Point/sec </div>
+                    <div class="text-center">
+                        <button class="Building-cost" id="Building-cost3" onclick="BuyProfessor()"> Cost: 2000 Points </button>
+                    </div>
                 </div>
             </div>
-            <div class="container" id="Building">
-                <div class="text-center h5" id="building-amount2"> Teacher [0] ~ +0 Points/sec </div>
-                <div class="text-center h5"> gives +20 Point/sec </div>
-                <div class="text-center">
-                    <button class="Building-cost" id="Building-cost2" onclick="BuyTeacher()"> Cost: 150 Points </button>
+            <div class="container d-flex justify-content-center">
+                <div class="container pt-2" id="Equation">
+                    <div class="text-center h3"> Equation </div>
+                    <div class="text-center h4" id="Equation1"> 1+x = 2 </div>
+                    <div class="text-center text-secondary" id="Equation1-boost"> 1x boost to your point production </div>
+                    <div class="text-center">
+                        <div class="text-secondary h5"> divide your x by 2 </div>
+                        <button class="btn btn-secondary" id="mult-cost" onclick="BuyMultiplication()"> Cost: 500,000 Points </button>
+                    </div>
                 </div>
-            </div>
-            <div class="container" id="Building">
-                <div class="text-center h5" id="building-amount3"> Professor [0] ~ +0 Points/sec </div>
-                <div class="text-center h5"> gives +150 Point/sec </div>
-                <div class="text-center">
-                    <button class="Building-cost" id="Building-cost3" onclick="BuyProfessor()"> Cost: 2000 Points </button>
-                </div>
-            </div>
-            <div class="container pt-2" id="Equation">
-                <div class="text-center h3"> Equation </div>
-                <div class="text-center h4" id="Equation1"> 1+x = 2 </div>
-                <div class="text-center text-secondary" id="Equation1-boost"> 1x boost to your point production </div>
-                <div class="text-center">
-                    <div class="text-secondary h5"> divide your x by 2 </div>
-                    <button class="btn btn-secondary" id="mult-cost" onclick="BuyMultiplication()"> Cost: 5000 Points </button>
+                <div class="container pt-2" id="Equation2">
+                    <div class="text-center h3"> Graphical Equation </div>
+                    <div class="text-center h4" id="Equation2"> y = kx+n </div>
+                    <div class="text-center h4" id="solved-equation"> y = 1 </div>
+                    <div class="text-center h6" id="k-amt"> k = 1 </div>
+                    <div class="text-center h6" id="x-amt"> x = 1 </div>
+                    <div class="text-center h6" id="n-amt"> n = 1 </div>
+                    <div class="text-center text-secondary" id="Equation2-boost"> 1x boost to your point production, and
+                        dividing your x from the 1st equation by 2 each y </div>
+                    <div class="text-center">
+                        <div class="text-secondary h5"> Increase x by 1 </div>
+                        <button class="btn btn-secondary" id="mult-cost2" onclick="BuyXBuyer()"> Cost: 1e10 Points</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -70,7 +91,7 @@
                 </div>
             </div>
             <div class="container text-center" id="sub-info">
-                <div id="changelog"><a href="changelog.html"> Changelog </a></div>
+                <div id="changelog" onclick="Save()"><a href="changelog.html"> Changelog </a></div>
             </div>
         </div>
     </div>
@@ -86,35 +107,63 @@
     </div>
     <div class="content">
         <div class="container">
-            <div class="d-flex justify-content-center gap-3 pt-3" id="Achievements">
-                <div class="Achv" id="Achv-1">
-                    <div id="achv-desc">
-                        <div id="achv-name"> <strong> Help arrived </strong> </div>
-                        Get a Classmate
+            <div class="container gap-3 pt-3" id="Achievements">
+                <div class="container" id="achv-row1">
+                    <div class="Achv" id="Achv-1">
+                        <div id="achv-desc">
+                            <div id="achv-name"> <strong> Help arrived </strong> </div>
+                            Get a Classmate
+                        </div>
+                    </div>
+                    <div class="Achv" id="Achv-2">
+                        <div id="achv-desc">
+                            <div id="achv-name"> <strong> Substitute teacher </strong> </div>
+                            Get a Teacher
+                        </div>
+                    </div>
+                    <div class="Achv" id="Achv-3">
+                        <div id="achv-desc">
+                            <div id="achv-name"> <strong> Nightmare incoming </strong> </div>
+                            Get a Professor
+                        </div>
+                    </div>
+                    <div class="Achv" id="Achv-4">
+                        <div id="achv-desc">
+                            <div id="achv-name"> <strong> Equalized problems </strong> </div>
+                            Unlock the Equation
+                        </div>
+                    </div>
+                    <div class="Achv" id="Achv-5">
+                        <div id="achv-desc">
+                            <div id="achv-name"> <strong> Allies </strong> </div>
+                            Unlock 2nd row of upgrades
+                        </div>
                     </div>
                 </div>
-                <div class="Achv" id="Achv-2">
-                    <div id="achv-desc">
-                        <div id="achv-name"> <strong> Substitute teacher </strong> </div>
-                        Get a Teacher
+                <div class="container" id="achv-row2">
+                    <div class="Achv" id="Achv-6">
+                        <div id="achv-desc">
+                            <div id="achv-name"> <strong> Point Madness </strong> </div>
+                            Get 10 million points
+                        </div>
                     </div>
-                </div>
-                <div class="Achv" id="Achv-3">
-                    <div id="achv-desc">
-                        <div id="achv-name"> <strong> Nightmare incoming </strong> </div>
-                        Get a Professor
+                    <div class="Achv" id="Achv-7">
+                        <div id="achv-desc">
+                            <div id="achv-name"> <strong> There is more? </strong> </div>
+                            Unlock 2nd Equation
+                        </div>
                     </div>
-                </div>
-                <div class="Achv" id="Achv-4">
-                    <div id="achv-desc">
-                        <div id="achv-name"> <strong> Equalized problems </strong> </div>
-                        Unlock the Equation
+                    <div class="Achv" id="Achv-8">
+                        <div id="achv-desc">
+                            <div id="achv-name"> <strong> Y are u so powerful </strong> </div>
+                            Get 5 Y
+                        </div>
                     </div>
-                </div>
-                <div class="Achv" id="Achv-5">
-                    <div id="achv-desc">
-                        <div id="achv-name"> <strong> The End.. for now </strong> </div>
-                        Reach 1 Million Points
+                    <div class="Achv" id="Achv-9">
+                        <div id="achv-desc">
+                            <div id="achv-name"> <strong> Heartbroken on another level </strong> </div>
+                            Have 10 X's in 2nd Equation
+                        </div>
                     </div>
                 </div>
             </div>
@@ -141,6 +190,26 @@
                         <div id="up-name"> [Mathematical Problems] </div>
                         <div id="up-desc"> Unlock the Equation </div>
                         <div id="up-cost3"> Cost: 350,000 Points </div>
+                    </button>
+                </div>
+                <div id="note"> Next row of upgrades at 1 Million points </div>
+                <div class="container" id="row2">
+                    <button class="Up-cost" id="up-cost4" onclick="BuyUp4()">
+                        <div id="up-name"> [Self synergism] </div>
+                        <div id="up-desc"> Points boost themselfs on a reduced rate </div>
+                        <div id="up-eff4"> Currently: 1x boost </div>
+                        <div id="up-cost4"> Cost: 3,000,000 Points </div>
+                    </button>
+                    <button class="Up-cost" id="up-cost5" onclick="BuyUp5()">
+                        <div id="up-name"> [Professional boost] </div>
+                        <div id="up-desc"> Professors boost themselfs on a reduced rate </div>
+                        <div id="up-eff5"> Currently: 1x boost </div>
+                        <div id="up-cost5"> Cost: 50,000,000 Points </div>
+                    </button>
+                    <button class="Up-cost" id="up-cost6" onclick="BuyUp6()">
+                        <div id="up-name"> [Graphical Problems] </div>
+                        <div id="up-desc"> Unlock the 2nd Equation </div>
+                        <div id="up-cost6"> Cost: 2.5e9 Points </div>
                     </button>
                 </div>
             </div>
