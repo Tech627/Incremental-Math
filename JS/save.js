@@ -130,7 +130,7 @@ function HardReset() {
 
 function Export() {
     const Exported = btoa(JSON.stringify(player))
-    console.log(Exported)
+    navigator.clipboard.writeText(Exported);
 }
 
 function Import() {
