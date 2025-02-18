@@ -114,12 +114,12 @@
 .Up-bought {
     width: 300px;
     height: 130px;
-    background-color: rgb(1, 59, 218);
+    background-color: rgb(1, 167, 218);
     font-size: 13px;
 }
 
 .Up-bought:hover {
-    background-color: rgba(0, 38, 142, 0.9);
+    background-color: rgba(0, 142, 140, 0.9);
 }
 
 .Up-buy {
