@@ -243,3 +243,5 @@ function Import() {
     Save()
     location.reload()
 }
+
+setInterval(Save, 15000)
