@@ -33,6 +33,7 @@ function UpdateGUI() {
     if(player.equations.equation2.y.gt(1)) {
         player.equations.equation2.eff = new Decimal(2).pow(player.equations.equation2.y)
         player.equations.equation2.eff = player.equations.equation2.eff.mul(2)
+        player.equations.equation2.eff = player.equations.equation2.eff.mul(player.equations.linear_equations.eff)
     }
     document.getElementById("Equation2-boost").textContent = format(player.equations.equation2.eff) + "x to your point production," +
     "and dividing your x from 1st equation by 2 each y"
@@ -48,7 +49,10 @@ function UpdateGUI() {
     }
     document.getElementById("total-p").textContent = "Your total points is " + format(player.tpoints)
     document.getElementById("total-b-bought").textContent = "You bought a total of " + format(player.buildings.tbuildings) + " buildings"
-    player.upgrades.up1.eff = player.points.log10(player.points).add(1)
+    player.upgrades.up1.eff = player.points.log10(player.points).mul(2.5).add(1)
+    if(player.linear_challenges.chal2.completed === true) {
+        player.upgrades.up1.eff = player.upgrades.up1.eff.mul(4)
+    }
     document.getElementById("up-eff1").textContent = "Currently: " + format(player.upgrades.up1.eff) + "x boost"
     player.upgrades.up2.eff = player.buildings.Professor.amount.sqrt(player.buildings.Professor.amount).add(1)
     document.getElementById("up-eff2").textContent = "Currently: " + format(player.upgrades.up2.eff) + "x boost to teachers"
@@ -56,8 +60,51 @@ function UpdateGUI() {
     document.getElementById("up-eff4").textContent = "Currently: " + format(player.upgrades.up4.eff) + "x boost"
     player.upgrades.up5.eff = player.buildings.Professor.amount.sqrt(player.buildings.Professor.amount).div(4).add(1)
     document.getElementById("up-eff5").textContent = "Currently: " + format(player.upgrades.up5.eff) + "x boost"
+    document.getElementById("ResetForLE").textContent = "Reset for " + format(CalculateLEgain()) + " Linear Essence"
+    player.LEgain = CalculateLEgain()
+    document.getElementById("Linear-essence").textContent = "You have " + format(player.LinearEssence) + " linear essence"
+    player.linear_upgrades.up1.eff = (player.LinearEssence.add(1)).mul(4)
+    document.getElementById("lup-eff1").textContent = "Currently: " + format(player.linear_upgrades.up1.eff) + "x boost"
+    document.getElementById("mult-cost3").textContent = "Cost: " + format(player.equations.nbuyer.cost) + " Points"
+    player.linear_upgrades.up5.eff = player.points.log10(player.points).sqrt().add(1)
+    document.getElementById("lup-eff5").textContent = "Currently: " + format(player.linear_upgrades.up5.eff) + "x boost"
+    player.linear_upgrades.up6.eff = player.LinearEssence.sqrt().div(2).add(1)
+    document.getElementById("lup-eff6").textContent = "Currently: " + format(player.linear_upgrades.up6.eff) + "x boost"
+    document.getElementById("LP").textContent = format(player.LinearPower)
+    document.getElementById("LEequation-cost1").textContent = "Cost: " + format(player.equations.linear_equations.a.cost) 
+    + " Linear Power"
+    document.getElementById("LEequation-cost2").textContent = "Cost: " + format(player.equations.linear_equations.x.cost) 
+    + " Linear Power"
+    document.getElementById("LEequation-cost3").textContent = "Cost: " + format(player.equations.linear_equations.b.cost) 
+    + " Linear Power"
+    document.getElementById("LEequation-cost4").textContent = "Cost: " + format(player.equations.linear_equations.y.cost) 
+    + " Linear Power"
+    document.getElementById("LEequation-cost5").textContent = "Cost: " + format(player.equations.linear_equations.c.cost) 
+    + " Linear Power"
+    document.getElementById("LEequation").textContent = "ax + by + c = " + format(CalculateLEegain())
+    if(player.linear_upgrades.up3.bought === true) {
+        BuyClassmate()
+        BuyTeacher()
+        BuyProfessor()
+    }
+    document.getElementById("LP-eff").textContent = "Multiplying your points, buildings, y boost by " 
+    + format(CalculateLEegain()) + "x, and x from 1st equation from 1st equation gets divided" 
+    + "by 4 everytime you reach a factor of 10"
+    player.equations.linear_equations.eff2 = player.equations.linear_equations.eff2.floor(player.equations.linear_equations.eff
+        .div(10))
+    player.linear_challenges.chal1.eff = player.buildings.Classmate.eff.pow(0.2).add(player.buildings.Teacher.eff.pow(0.2).add(
+        player.buildings.Professor.eff.pow(0.2)
+    ))
+    document.getElementById("Chal-reward").textContent = "Reward: Points are boosted by buildings. Currently: " +
+    format(player.linear_challenges.chal1.eff) + "x boost"
+    document.getElementById("gone-linear").textContent = "You have gone linear " + format(player.GoneLinear) + " times"
+    document.getElementById("Time-in-linear").textContent = "You've spent " + format(player.TimeinLinear) + " seconds in linear run"
+    document.getElementById("Fastest-linear").textContent = "Your fastest linear was " + format(player.FastestLinear) + " seconds"
     if(player.upgrades.up3.bought === true) {
         document.getElementById("Equation").classList.add("unlocked")
+    }
+    if(player.upgrades.up3.bought != true) {
+        document.getElementById("Equation").classList.remove("unlocked")
     }
     if(player.buildings.Classmate.amount.gte(1)) {
         player.achievements.achv1.completed = true
@@ -86,11 +133,31 @@ function UpdateGUI() {
         document.getElementById("Equation2").classList.add("unlocked")
         player.achievements.achv7.completed = true
     }
+    if(player.upgrades.up6.bought != true) {
+        document.getElementById("Equation2").classList.remove("unlocked")
+    }
     if(player.equations.equation2.y.gte(5)) {
         player.achievements.achv8.completed = true
     }
     if(player.equations.equation2.x.gte(10)) {
         player.achievements.achv9.completed = true
+    }
+    if(player.LinearUnl === true) {
+        player.achievements.achv10.completed = true
+    }
+    if(player.linear_upgrades.up4.bought === true) {
+        player.achievements.achv11.completed = true
+    }
+    if(player.equations.linear_equations.eff.gte(10)) {
+        player.achievements.achv12.completed = true
+    }
+    if(player.linear_upgrades.up8.bought === true) {
+        player.achievements.achv13.completed = true
+    }
+    if(player.linear_challenges.chal1.completed === true && player.linear_challenges.chal2.completed === true &&
+        player.linear_challenges.chal3.completed === true
+    ) {
+        player.achievements.achv14.completed = true
     }
 }
 
@@ -127,6 +194,11 @@ function UpdateStyles() {
         document.getElementById("up-cost1").classList.remove("Up-cost")
         document.getElementById("up-cost1").classList.add("Up-buy")
     }
+    else if (player.upgrades.up1.bought != true) {
+        document.getElementById("up-cost1").classList.add("Up-cost")
+        document.getElementById("up-cost1").classList.remove("Up-buy")
+        document.getElementById("up-cost1").classList.remove("Up-bought")
+    }
     else if (player.points.lt(player.upgrades.up1.cost) && player.upgrades.up1.bought != true) {
         document.getElementById("up-cost1").classList.add("Up-cost")
         document.getElementById("up-cost1").classList.remove("Up-bought")
@@ -138,6 +210,11 @@ function UpdateStyles() {
     else if (player.upgrades.up2.bought === true) {
         document.getElementById("up-cost2").classList.remove("Up-cost")
         document.getElementById("up-cost2").classList.add("Up-buy")
+    }
+    else if (player.upgrades.up2.bought != true) {
+        document.getElementById("up-cost2").classList.add("Up-cost")
+        document.getElementById("up-cost2").classList.remove("Up-buy")
+        document.getElementById("up-cost2").classList.remove("Up-bought")
     }
     else if (player.points.lt(player.upgrades.up2.cost) && player.upgrades.up2.bought != true) {
         document.getElementById("up-cost2").classList.add("Up-cost")
@@ -151,6 +228,11 @@ function UpdateStyles() {
         document.getElementById("up-cost3").classList.remove("Up-cost")
         document.getElementById("up-cost3").classList.add("Up-buy")
     }
+    else if (player.upgrades.up3.bought != true) {
+        document.getElementById("up-cost3").classList.add("Up-cost")
+        document.getElementById("up-cost3").classList.remove("Up-buy")
+        document.getElementById("up-cost3").classList.remove("Up-bought")
+    }
     else if (player.points.lt(player.upgrades.up3.cost) && player.upgrades.up3.bought != true) {
         document.getElementById("up-cost3").classList.add("Up-cost")
         document.getElementById("up-cost3").classList.remove("Up-bought")
@@ -162,6 +244,11 @@ function UpdateStyles() {
     else if (player.upgrades.up4.bought === true) {
         document.getElementById("up-cost4").classList.remove("Up-cost")
         document.getElementById("up-cost4").classList.add("Up-buy")
+    }
+    else if (player.upgrades.up4.bought != true) {
+        document.getElementById("up-cost4").classList.add("Up-cost")
+        document.getElementById("up-cost4").classList.remove("Up-buy")
+        document.getElementById("up-cost4").classList.remove("Up-bought")
     }
     else if (player.points.lt(player.upgrades.up4.cost) && player.upgrades.up1.bought != true) {
         document.getElementById("up-cost4").classList.add("Up-cost")
@@ -175,6 +262,11 @@ function UpdateStyles() {
         document.getElementById("up-cost5").classList.remove("Up-cost")
         document.getElementById("up-cost5").classList.add("Up-buy")
     }
+    else if (player.upgrades.up5.bought != true) {
+        document.getElementById("up-cost5").classList.add("Up-cost")
+        document.getElementById("up-cost5").classList.remove("Up-buy")
+        document.getElementById("up-cost5").classList.remove("Up-bought")
+    }
     else if (player.points.lt(player.upgrades.up5.cost) && player.upgrades.up5.bought != true) {
         document.getElementById("up-cost5").classList.add("Up-cost")
         document.getElementById("up-cost5").classList.remove("Up-bought")
@@ -187,9 +279,165 @@ function UpdateStyles() {
         document.getElementById("up-cost6").classList.remove("Up-cost")
         document.getElementById("up-cost6").classList.add("Up-buy")
     }
+    else if (player.upgrades.up6.bought != true) {
+        document.getElementById("up-cost6").classList.add("Up-cost")
+        document.getElementById("up-cost6").classList.remove("Up-buy")
+        document.getElementById("up-cost6").classList.remove("Up-bought")
+    }
     else if (player.points.lt(player.upgrades.up6.cost) && player.upgrades.up6.bought != true) {
         document.getElementById("up-cost6").classList.add("Up-cost")
         document.getElementById("up-cost6").classList.remove("Up-bought")
+    }
+    if(player.LinearEssence.gte(player.linear_upgrades.up1.cost) && player.linear_upgrades.up1.bought != true) {
+        document.getElementById("lup-cost1").classList.remove("Lup-cost")
+        document.getElementById("lup-cost1").classList.add("Lup-bought")
+    }
+    else if (player.linear_upgrades.up1.bought === true) {
+        document.getElementById("lup-cost1").classList.remove("Lup-cost")
+        document.getElementById("lup-cost1").classList.add("Lup-buy")
+    }
+    else if (player.LinearEssence.lt(player.linear_upgrades.up1.cost) && player.linear_upgrades.up1.bought != true) {
+        document.getElementById("lup-cost2").classList.add("Lup-cost")
+        document.getElementById("lup-cost2").classList.remove("Lup-bought")
+    }
+    if(player.LinearEssence.gte(player.linear_upgrades.up2.cost) && player.linear_upgrades.up2.bought != true) {
+        document.getElementById("lup-cost2").classList.remove("Lup-cost")
+        document.getElementById("lup-cost2").classList.add("Lup-bought")
+    }
+    else if (player.linear_upgrades.up2.bought === true) {
+        document.getElementById("lup-cost2").classList.remove("Lup-cost")
+        document.getElementById("lup-cost2").classList.add("Lup-buy")
+    }
+    else if (player.LinearEssence.lt(player.linear_upgrades.up2.cost) && player.linear_upgrades.up2.bought != true) {
+        document.getElementById("lup-cost2").classList.add("Lup-cost")
+        document.getElementById("lup-cost2").classList.remove("Lup-bought")
+    }
+    if(player.LinearEssence.gte(player.linear_upgrades.up3.cost) && player.linear_upgrades.up3.bought != true) {
+        document.getElementById("lup-cost3").classList.remove("Lup-cost")
+        document.getElementById("lup-cost3").classList.add("Lup-bought")
+    }
+    else if (player.linear_upgrades.up3.bought === true) {
+        document.getElementById("lup-cost3").classList.remove("Lup-cost")
+        document.getElementById("lup-cost3").classList.add("Lup-buy")
+    }
+    else if (player.LinearEssence.lt(player.linear_upgrades.up3.cost) && player.linear_upgrades.up3.bought != true) {
+        document.getElementById("lup-cost3").classList.add("Lup-cost")
+        document.getElementById("lup-cost3").classList.remove("Lup-bought")
+    }
+    if(player.LinearEssence.gte(player.linear_upgrades.up4.cost) && player.linear_upgrades.up4.bought != true) {
+        document.getElementById("lup-cost4").classList.remove("Lup-cost")
+        document.getElementById("lup-cost4").classList.add("Lup-bought")
+    }
+    else if (player.linear_upgrades.up4.bought === true) {
+        document.getElementById("lup-cost4").classList.remove("Lup-cost")
+        document.getElementById("lup-cost4").classList.add("Lup-buy")
+    }
+    else if (player.LinearEssence.lt(player.linear_upgrades.up4.cost) && player.linear_upgrades.up4.bought != true) {
+        document.getElementById("lup-cost4").classList.add("Lup-cost")
+        document.getElementById("lup-cost4").classList.remove("Lup-bought")
+    }
+    if(player.LinearPower.gte(player.equations.linear_equations.a.cost)) {
+        document.getElementById("LEe-cost1").classList.remove("LEequation-cost")
+        document.getElementById("LEe-cost1").classList.add("LEequation-bought")
+    }
+    else {
+        document.getElementById("LEe-cost1").classList.add("LEequation-cost")
+        document.getElementById("LEe-cost1").classList.remove("LEequation-bought")
+    }
+    if(player.LinearPower.gte(player.equations.linear_equations.x.cost)) {
+        document.getElementById("LEe-cost2").classList.remove("LEequation-cost")
+        document.getElementById("LEe-cost2").classList.add("LEequation-bought")
+    }
+    else {
+        document.getElementById("LEe-cost2").classList.add("LEequation-cost")
+        document.getElementById("LEe-cost2").classList.remove("LEequation-bought")
+    }
+    if(player.LinearPower.gte(player.equations.linear_equations.b.cost)) {
+        document.getElementById("LEe-cost3").classList.remove("LEequation-cost")
+        document.getElementById("LEe-cost3").classList.add("LEequation-bought")
+    }
+    else {
+        document.getElementById("LEe-cost3").classList.add("LEequation-cost")
+        document.getElementById("LEe-cost3").classList.remove("LEequation-bought")
+    }
+    if(player.LinearPower.gte(player.equations.linear_equations.y.cost)) {
+        document.getElementById("LEe-cost4").classList.remove("LEequation-cost")
+        document.getElementById("LEe-cost4").classList.add("LEequation-bought")
+    }
+    else {
+        document.getElementById("LEe-cost4").classList.add("LEequation-cost")
+        document.getElementById("LEe-cost4").classList.remove("LEequation-bought")
+    }
+    if(player.LinearPower.gte(player.equations.linear_equations.c.cost)) {
+        document.getElementById("LEe-cost5").classList.remove("LEequation-cost")
+        document.getElementById("LEe-cost5").classList.add("LEequation-bought")
+    }
+    else {
+        document.getElementById("LEe-cost5").classList.add("LEequation-cost")
+        document.getElementById("LEe-cost5").classList.remove("LEequation-bought")
+    }
+    if(player.linear_challenges.chal1.inChal === true) {
+        document.getElementById("Challenge1").classList.add("Challenge-running")
+        document.getElementById("Challenge1").classList.remove("Challenge")
+    }
+    else if (player.linear_challenges.chal1.completed === true) {
+        document.getElementById("Challenge1").classList.add("Challenge-completed")
+        document.getElementById("Challenge1").classList.remove("Challenge-running")
+    }
+    else if(player.linear_challenges.chal1.inChal === false) {
+        document.getElementById("Challenge1").classList.add("Challenge")
+        document.getElementById("Challenge1").classList.remove("Challenge-running")
+    }
+    if(player.linear_challenges.chal2.inChal === true) {
+        document.getElementById("Challenge2").classList.add("Challenge-running")
+        document.getElementById("Challenge2").classList.remove("Challenge")
+    }
+    else if (player.linear_challenges.chal2.completed === true) {
+        document.getElementById("Challenge2").classList.add("Challenge-completed")
+        document.getElementById("Challenge2").classList.remove("Challenge-running")
+    }
+    else if(player.linear_challenges.chal2.inChal === false) {
+        document.getElementById("Challenge2").classList.add("Challenge")
+        document.getElementById("Challenge2").classList.remove("Challenge-running")
+    }
+    if(player.linear_challenges.chal3.inChal === true) {
+        document.getElementById("Challenge3").classList.add("Challenge-running")
+        document.getElementById("Challenge3").classList.remove("Challenge")
+    }
+    else if (player.linear_challenges.chal3.completed === true) {
+        document.getElementById("Challenge3").classList.add("Challenge-completed")
+        document.getElementById("Challenge3").classList.remove("Challenge-running")
+    }
+    else if(player.linear_challenges.chal3.inChal === false) {
+        document.getElementById("Challenge3").classList.add("Challenge")
+        document.getElementById("Challenge3").classList.remove("Challenge-running")
+    }
+    if(player.linear_challenges.chal4.inChal === true) {
+        document.getElementById("Challenge4").classList.add("Challenge-running")
+        document.getElementById("Challenge4").classList.remove("Challenge")
+    }
+    else if (player.linear_challenges.chal4.completed === true) {
+        document.getElementById("Challenge4").classList.add("Challenge-completed")
+        document.getElementById("Challenge4").classList.remove("Challenge-running")
+    }
+    else if(player.linear_challenges.chal4.inChal === false) {
+        document.getElementById("Challenge4").classList.add("Challenge")
+        document.getElementById("Challenge4").classList.remove("Challenge-running")
+    }
+    if(player.LinearUnl === true) {
+        document.getElementById("Linear-statistics").classList.add("unlocked")
+        document.getElementById("layertab").classList.add("unlocked")
+        document.getElementById("ResetForLE").classList.add("unlocked")
+        document.getElementById("achv-row3").classList.add("unlocked")
+        document.getElementById("Linear-essence-guide").classList.add("unlocked")
+    }
+    if(player.linear_upgrades.up8.bought === true) {
+        document.getElementById("Chals-tab").classList.add("unlocked")
+        document.getElementById("Linear-chals-guide").classList.add("unlocked")
+    }
+    if(player.linear_upgrades.up4.bought === true) {
+        document.getElementById("NBuyer").classList.add("unlocked")
+        document.getElementById("Lrow2").classList.add("unlocked")
     }
     if(player.achievements.achv1.completed === true) {
         document.getElementById("Achv-1").classList.add("completed")
@@ -218,6 +466,21 @@ function UpdateStyles() {
     if(player.achievements.achv9.completed === true) {
         document.getElementById("Achv-9").classList.add("completed")
     }
+    if(player.achievements.achv10.completed === true) {
+        document.getElementById("Achv-10").classList.add("completed")
+    }
+    if(player.achievements.achv11.completed === true) {
+        document.getElementById("Achv-11").classList.add("completed")
+    }
+    if(player.achievements.achv12.completed === true) {
+        document.getElementById("Achv-12").classList.add("completed")
+    }
+    if(player.achievements.achv13.completed === true) {
+        document.getElementById("Achv-13").classList.add("completed")
+    }
+    if(player.achievements.achv14.completed === true) {
+        document.getElementById("Achv-14").classList.add("completed")
+    }
 }
 
 var LastUpdate = Date.now()
@@ -228,32 +491,61 @@ function CalculatePointGain() {
     gain = gain.add(player.buildings.Teacher.amount.mul(player.buildings.Teacher.eff))
     gain = gain.add(player.buildings.Professor.amount.mul(player.buildings.Professor.eff))
     gain = gain.mul(player.equations.equation1.x)
+    gain = gain.mul(CalculateLEegain())
     if(player.upgrades.up4.bought === true) {
         gain = gain.mul(player.upgrades.up4.eff)
+    }
+    if(player.linear_upgrades.up1.bought === true) {
+        gain = gain.mul(player.linear_upgrades.up1.eff)
+    }
+    if(player.linear_challenges.chal1.inChal === true || player.linear_challenges.chal4.inChal === true) {
+        gain = gain.add(1)
+        gain = gain.log10()
+    }
+    if(player.linear_challenges.chal1.completed === true) {
+        gain = gain.mul(player.linear_challenges.chal1.eff)
     }
     return gain
 }
 
 function CalculateClassmateMult() {
     let cmult = new Decimal(1)
+    cmult = cmult.mul(CalculateLEegain())
     if(player.upgrades.up1.bought === true) {
         cmult = cmult.mul(player.upgrades.up1.eff)
+    }
+    if(player.linear_upgrades.up2.bought === true) {
+        cmult = cmult.mul(5)
+    }
+    if(player.linear_upgrades.up5.bought === true) {
+        cmult = cmult.mul(player.linear_upgrades.up5.eff)
+    }
+    if(player.linear_challenges.chal3.completed === true) {
+        cmult = cmult.mul(3)
     }
     return cmult
 }
 
 function CalculateTeacherMult() {
     let tmult = new Decimal(20)
+    tmult = tmult.mul(CalculateLEegain())
     if(player.upgrades.up2.bought === true) {
         tmult = tmult.mul(player.upgrades.up2.eff)
+    }
+    if(player.linear_upgrades.up5.bought === true) {
+        tmult = tmult.mul(player.linear_upgrades.up5.eff)
     }
     return tmult
 }
 
 function CalculateProfessorMult() {
     let pmult = new Decimal(150)
+    pmult = pmult.mul(CalculateLEegain())
     if(player.upgrades.up5.bought === true) {
         pmult = pmult.mul(player.upgrades.up5.eff)
+    }
+    if(player.linear_upgrades.up5.bought === true) {
+        pmult = pmult.mul(player.linear_upgrades.up5.eff)
     }
     return pmult
 }
@@ -264,7 +556,36 @@ function CalculateEquationGain() {
     if(player.equations.equation2.y.gt(1)) {
         xeff = xeff.mul(new Decimal(2).pow(player.equations.equation2.y))
     }
+    if(player.equations.linear_equations.eff2.gte(1)) {
+        xeff = xeff.mul(new Decimal(4).pow(player.equations.linear_equations.eff2.sub(1)))
+    }
     return xeff
+}
+
+function CalculateLEgain() {
+    let LEgain = new Decimal(0)
+    if(player.points.gte(1e10)) {
+        LEgain = new Decimal(new Decimal(1.1).pow((player.points.div(1e10)).pow(0.1).add(player.equations.equation1.x.pow(0.1))))
+    }
+    if(player.linear_upgrades.up6.bought === true) {
+        LEgain = LEgain.mul(player.linear_upgrades.up6.eff)
+    }
+    LEgain = LEgain.floor()
+    return LEgain
+}
+
+function CalculateLPgain() {
+    let LPgain = new Decimal(0)
+    LPgain = LPgain.add(CalculateLEegain())
+    return LPgain
+}
+
+function CalculateLEegain() {
+    let LEegain = new Decimal(0)
+    LEegain = LEegain.add(player.equations.linear_equations.a.amount.mul(player.equations.linear_equations.x.amount)
+    .add(player.equations.linear_equations.b.amount.mul(player.equations.linear_equations.y.amount)).add(
+        player.equations.linear_equations.c.amount))
+    return LEegain
 }
 
 function productionLoop(diff) {
@@ -275,6 +596,10 @@ function productionLoop(diff) {
     player.buildings.Teacher.eff = CalculateTeacherMult()
     player.buildings.Professor.eff = CalculateProfessorMult()
     player.equations.equation1.x = CalculateEquationGain()
+    if(player.LinearUnl === true) {
+        player.LinearPower = player.LinearPower.add(CalculateLPgain().mul(diff))
+    }
+    player.TimeinLinear = player.TimeinLinear.add(new Decimal(1).mul(diff))
 }
 
 function MainLoop() {
