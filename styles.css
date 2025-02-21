@@ -1,9 +1,11 @@
 body {
     background-color: rgb(0, 0, 0);
+    color: white;
 }
 
 body.light {
     background-color: white;
+    color: black;
 }
 
 #app {

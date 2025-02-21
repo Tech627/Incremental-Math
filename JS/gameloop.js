@@ -427,9 +427,11 @@ function UpdateStyles() {
     if(player.LinearUnl === true) {
         document.getElementById("Linear-statistics").classList.add("unlocked")
         document.getElementById("layertab").classList.add("unlocked")
-        document.getElementById("ResetForLE").classList.add("unlocked")
         document.getElementById("achv-row3").classList.add("unlocked")
         document.getElementById("Linear-essence-guide").classList.add("unlocked")
+    }
+    if(player.points.gte(1e10)) {
+        document.getElementById("ResetForLE").classList.add("unlocked")
     }
     if(player.linear_upgrades.up8.bought === true) {
         document.getElementById("Chals-tab").classList.add("unlocked")
