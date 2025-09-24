@@ -1,3 +1,64 @@
+var buildings = []
+var upgrades = []
+var linearUpgrades = []
+var achievements = []
+var linearChallenges = []
+var linearEquation = []
+
+for(let i = 0; i < 3; i++) {
+    let building = {
+        amount: new Decimal(0),
+        cost: new Decimal(10).pow(i+1),
+        eff: new Decimal(1).mul(new Decimal(11).pow(i)),
+        automation: false,
+    }
+    buildings.push(building)
+}
+
+for(let i = 0; i < 9; i++) {
+    let upgrade = {
+        bought: false,
+        cost: new Decimal(20000),
+        eff: new Decimal(1),
+    }
+    upgrades.push(upgrade)
+}
+
+for(let i = 0; i < 12; i++) {
+    let linearUpgrade = {
+        bought: false,
+        cost: new Decimal(1),
+        eff: new Decimal(1),
+        amt: new Decimal(1),
+    }
+    linearUpgrades.push(linearUpgrade)
+}
+
+for(let i = 0; i < 15; i++) {
+    let achievement = {
+        completed: false,
+    }
+    achievements.push(achievement)
+}
+
+for(let i = 0; i < 6; i++) {
+    let linearChallenge = {
+        completed: false,
+        inChal: false,
+        goal: new Decimal(3000),
+        eff: new Decimal(1),
+    }
+    linearChallenges.push(linearChallenge)
+}
+
+for(let i = 0; i < 5; i++) {
+    let leVar = {
+        cost: new Decimal(60).pow(i + 1),
+        amount: new Decimal(0),
+    } 
+    linearEquation.push(leVar)
+} 
+
 function UpdateGUI() {
     document.getElementById("Points").textContent = "You have " + format(player.points) + " Points"
     if(player.pointgain.eq(1)) {
@@ -7,36 +68,188 @@ function UpdateGUI() {
         document.getElementById("btn-gain").textContent = "+" + format(player.pointgain) + "Points"
     }
     document.getElementById("PointsPerSec").textContent = "(+" + format(player.pointsPerSec) + " Points/sec)" 
-    document.getElementById("building-amount").textContent = "Classmate [" + format(player.buildings.Classmate.amount) + "]"
-    document.getElementById("building-production").textContent = "(+" + format(player.buildings.Classmate.amount
-        .mul(player.buildings.Classmate.eff)) + " Points/sec)"
-    document.getElementById("building-prod").textContent = "gives +" + format(CalculateClassmateMult()) + " Points/sec"
-    document.getElementById("Building-cost").textContent = "Cost: " + format(player.buildings.Classmate.cost) + " Points"
-    document.getElementById("building-amount2").textContent = "Teacher [" + format(player.buildings.Teacher.amount) + "]"
-    document.getElementById("building-production2").textContent = "(+" + format(player.buildings.Teacher.amount
-        .mul(player.buildings.Teacher.eff)) + " Points/sec)"
-    document.getElementById("building-prod2").textContent = "gives +" + format(CalculateTeacherMult()) + " Points/sec"
-    document.getElementById("Building-cost2").textContent = "Cost: " + format(player.buildings.Teacher.cost) + " Points"
-    document.getElementById("building-amount3").textContent = "Professor [" + format(player.buildings.Professor.amount) + "]"
-    document.getElementById("building-production3").textContent = "(+" + format(player.buildings.Professor.amount
-        .mul(player.buildings.Professor.eff)) + " Points/sec)"
-    document.getElementById("building-prod3").textContent = "gives +" + format(CalculateProfessorMult()) + " Points/sec"
-    document.getElementById("Building-cost3").textContent = "Cost: " + format(player.buildings.Professor.cost) + " Points"
+    for(let i = 2; i > -1; i--) {
+        let b = buildings[i]
+        document.getElementById("building-amount" + (i + 1)).textContent = "[" + formatWhole(b.amount) + "]"
+        document.getElementById("building-production" + (i + 1)).textContent = "(+" + format(b.amount.mul(b.eff)) + " Points/sec)"
+        if (!linearChallenges[2].inChal && !linearChallenges[3].inChal) {
+            document.getElementById("Building-cost" + (i + 1)).textContent = "Cost: " + format(b.cost) + " Points"
+        } else {
+            let l = linearChallenges[2].inChal ? 3 : 4;
+                document.getElementById("Building-cost" + (i + 1)).textContent = "LOCKED: LE Challenge " + l
+        }
+        if(b.automation) {
+            if(upgrades[6].bought) {
+                BuyBuilding(3, true)
+                BuyBuilding(2, true)
+            }
+            else {
+                BuyBuilding(i+1, true)
+            }
+        }
+        if(linearUpgrades[4].bought && !linearChallenges[4].inChal) {
+            b.eff = b.eff.mul(linearUpgrades[4].eff)
+        }
+    }
+    for(let i = 0; i < 9; i++) {
+        let u = upgrades[i]
+        upgrades[0].eff = player.points.max(1).log10().mul(2.5).add(1)
+        upgrades[1].eff = buildings[2].amount.sqrt(buildings[2].amount).add(1)
+        upgrades[3].eff = player.points.max(1).log10().div(2.5).add(1)
+        upgrades[4].eff = buildings[2].amount.sqrt(buildings[2].amount).div(2).add(1)
+        upgrades[7].eff = player.points.max(1).log10().div(25).add(1)
+        upgrades[0].cost = new Decimal(20000)
+        upgrades[1].cost = new Decimal(75000)
+        upgrades[2].cost = new Decimal(1.5e5)
+        upgrades[3].cost = new Decimal(3e5)
+        upgrades[4].cost = new Decimal(4.5e6)
+        upgrades[5].cost = new Decimal(1e7)
+        upgrades[6].cost = new Decimal(1e85)
+        upgrades[7].cost = new Decimal(1e100)
+        upgrades[8].cost = new Decimal(1e250)
+        buildings[0].eff = new Decimal(1)
+        if(upgrades[0].bought) {
+            buildings[0].eff = upgrades[0].eff
+        }
+        if(linearUpgrades[1].bought && !linearChallenges[4].inChal) {
+            upgrades[0].eff = upgrades[0].eff.mul(5)
+        }
+        buildings[1].eff = new Decimal(11)
+        if(upgrades[1].bought) {
+            buildings[1].eff = buildings[1].eff.mul(upgrades[1].eff)
+        }
+        buildings[2].eff = new Decimal(121)
+        if(upgrades[4].bought) {
+            buildings[2].eff = buildings[2].eff.mul(upgrades[4].eff)
+        }
+        if(upgrades[7].bought) {
+            buildings[2].eff = buildings[2].eff.mul(upgrades[7].eff)
+        }
+        if([2,5,6,8].includes(i)){
+            continue
+        }
+        else {
+            document.getElementById("up-eff" + (i + 1)).textContent = "Currently: " + format(u.eff) + "x boost"
+        }
+        if(upgrades[2].bought) {
+            document.getElementById("Equation").classList.add("unlocked")
+        } else {
+            document.getElementById("Equation").classList.remove("unlocked")
+        }
+        if(upgrades[5].bought) {
+            document.getElementById("Equation2").classList.add("unlocked")
+        } else {
+            document.getElementById("Equation2").classList.remove("unlocked")
+        }
+    }
+    for(let i = 0; i < 12; i++) {
+        let lu = linearUpgrades[i]
+        linearUpgrades[0].eff = player.LinearEssence.add(1).mul(4)
+        linearUpgrades[4].eff = player.points.add(1).log10().sqrt().add(1)
+        linearUpgrades[5].eff = player.LinearEssence.add(1).log10().div(5).add(1)
+        linearUpgrades[9].eff = buildings[0].amount.add(1).div(5).add(buildings[1].amount.add(1).div(5)).add(buildings[2].amount.add(1).div(5))
+        linearUpgrades[10].eff = player.LinearEssence.add(1).sqrt().mul(250)
+        linearUpgrades[0].cost = new Decimal(1)
+        linearUpgrades[1].cost = new Decimal(1)
+        linearUpgrades[2].cost = new Decimal(3)
+        linearUpgrades[3].cost = new Decimal(5)
+        linearUpgrades[4].cost = new Decimal(5e3)
+        linearUpgrades[5].cost = new Decimal(1e4)
+        linearUpgrades[6].cost = new Decimal(1.5e4)
+        linearUpgrades[7].cost = new Decimal(2.5e4)
+        linearUpgrades[8].cost = new Decimal(2.5e4)
+        linearUpgrades[9].cost = new Decimal(5e4)
+        linearUpgrades[10].cost = new Decimal(7.5e4)
+        linearUpgrades[11].cost = new Decimal(1e5)
+        linearChallenges[4].eff = lu.amt.div(12).add(1.6)
+        if([1, 2, 3, 6, 7, 8, 11].includes(i)) {
+            continue
+        }
+        document.getElementById("lup-eff" + (i + 1)).textContent = "Currently: " + format(lu.eff) + "x boost"
+    }
+    for(let i = 0; i < 6; i++) {
+        linearChallenges[0].goal = new Decimal(3e3)
+        linearChallenges[1].goal = new Decimal(1e13)
+        linearChallenges[2].goal = new Decimal(1e4)
+        linearChallenges[3].goal = new Decimal(5e3)
+        linearChallenges[4].goal = new Decimal(1e45)
+        linearChallenges[5].goal = new Decimal(1e110)
+        linearChallenges[0].eff = buildings[0].eff.pow(0.2).add(buildings[1].eff.pow(0.2).add(buildings[2].eff.pow(0.2)))
+        if(linearChallenges[1].completed) {
+            upgrades[0].eff = upgrades[0].eff.mul(4)
+        }
+        if([1, 2, 3, 5].includes(i)) {
+            continue
+        }
+        else {
+            document.getElementById("Chal-reward" + (i + 1)).textContent = "Currently " + format(linearChallenges[i].eff) + "x boost"
+        }
+    }
+    for(let i = 0; i < 5; i++) {
+        let le = linearEquation[i]
+        document.getElementById("LEequation-cost" + (i + 1)).textContent = "Cost: " + format(le.cost) + " Linear Power"
+    }
+
+    if(buildings[0].amount.gte(1)) {
+        achievements[0].completed = true
+    }
+    if(buildings[1].amount.gte(1)) {
+        achievements[1].completed = true
+    }
+    if(buildings[2].amount.gte(1)) {
+        achievements[2].completed = true
+    }
+    if(upgrades[2].bought) {
+        achievements[3].completed = true
+    }
+    if(player.points.gte(3e5)) {
+        achievements[4].completed = true
+    }
+    if(player.points.gte(1e7)) {
+        achievements[5].completed = true
+    }
+    if(upgrades[5].bought) {
+        achievements[6].completed = true
+    }
+    if(player.equations.equation2.y.gte(5)) {
+        achievements[7].completed = true
+    }
+    if(player.equations.equation2.x.gte(10)) {
+        achievements[8].completed = true
+    }
+    if(player.LinearUnl) {
+        achievements[9].completed = true
+    }
+    if(linearUpgrades[3].bought) {
+        achievements[10].completed = true
+    }
+    if(player.equations.linear_equations.eff2.gte(10)) {
+        achievements[11].completed = true
+    }
+    if(linearUpgrades[7].bought) {
+        achievements[12].completed = true
+    }
+    if(linearChallenges[0].completed && linearChallenges[1].completed && linearChallenges[2].completed) {
+        achievements[13].completed = true
+    }
+    if(linearUpgrades[11].bought) {
+        achievements[14].completed = true
+    }
+
     if(player.equations.equation1.x.eq(1)) {
         document.getElementById("Equation1").textContent = "1+x=2"
     }
     else {
         document.getElementById("Equation1").textContent = "1+(x/" + format(CalculateEquationGain(), precision = 0) + ")=2"
     }
-    document.getElementById("Equation1-boost").textContent = format(CalculateEquationGain()) + "x to your point production"
+    document.getElementById("Equation1-boost").textContent = "x = " + format(CalculateEquationGain(), precision = 0) + " -> " + format(CalculateEquationGain()) + "x to your point production"
     document.getElementById("mult-cost").textContent = "Cost: " + format(player.equations.multiplicator1.cost) + " Points"
     if(player.equations.equation2.y.gt(1)) {
-        player.equations.equation2.eff = new Decimal(2).pow(player.equations.equation2.y)
-        player.equations.equation2.eff = player.equations.equation2.eff.mul(2)
+        player.equations.equation2.eff = new Decimal(2).pow(player.equations.equation2.y).mul(2)
         player.equations.equation2.eff = player.equations.equation2.eff.mul(player.equations.linear_equations.eff)
     }
-    document.getElementById("Equation2-boost").textContent = format(player.equations.equation2.eff) + "x to your point production," +
-    "and dividing your x from 1st equation by 2 each y"
+    document.getElementById("Equation2-boost").textContent = format(player.equations.equation2.eff) + "x to your point production" +
+    " and dividing your x from 1st equation by " + format(new Decimal(2).pow(player.equations.equation2.y))
     document.getElementById("mult-cost2").textContent = "Cost: " + format(player.equations.xbuyer.cost) + " Points"
     player.equations.equation2.y = player.equations.equation2.k.mul(player.equations.equation2.x).add(player.equations.equation2.n)
     document.getElementById("solved-equation").textContent = "y = " + format(player.equations.equation2.y)
@@ -48,440 +261,235 @@ function UpdateGUI() {
         document.getElementById("best-p-ever").textContent = "Your Best points ever was " + format(player.bpoints)
     }
     document.getElementById("total-p").textContent = "Your total points is " + format(player.tpoints)
-    document.getElementById("total-b-bought").textContent = "You bought a total of " + format(player.buildings.tbuildings) + " buildings"
-    player.upgrades.up1.eff = player.points.log10(player.points).mul(2.5).add(1)
-    if(player.linear_challenges.chal2.completed === true) {
-        player.upgrades.up1.eff = player.upgrades.up1.eff.mul(4)
-    }
-    document.getElementById("up-eff1").textContent = "Currently: " + format(player.upgrades.up1.eff) + "x boost"
-    player.upgrades.up2.eff = player.buildings.Professor.amount.sqrt(player.buildings.Professor.amount).add(1)
-    document.getElementById("up-eff2").textContent = "Currently: " + format(player.upgrades.up2.eff) + "x boost to teachers"
-    player.upgrades.up4.eff = player.points.log10(player.points).div(2.5)
-    document.getElementById("up-eff4").textContent = "Currently: " + format(player.upgrades.up4.eff) + "x boost"
-    player.upgrades.up5.eff = player.buildings.Professor.amount.sqrt(player.buildings.Professor.amount).div(4).add(1)
-    document.getElementById("up-eff5").textContent = "Currently: " + format(player.upgrades.up5.eff) + "x boost"
+    document.getElementById("total-b-bought").textContent = "You bought a total of " + format(player.tbuildings) + " buildings"
     document.getElementById("ResetForLE").textContent = "Reset for " + format(CalculateLEgain()) + " Linear Essence"
     player.LEgain = CalculateLEgain()
     document.getElementById("Linear-essence").textContent = "You have " + format(player.LinearEssence) + " linear essence"
-    player.linear_upgrades.up1.eff = (player.LinearEssence.add(1)).mul(4)
-    document.getElementById("lup-eff1").textContent = "Currently: " + format(player.linear_upgrades.up1.eff) + "x boost"
     document.getElementById("mult-cost3").textContent = "Cost: " + format(player.equations.nbuyer.cost) + " Points"
-    player.linear_upgrades.up5.eff = player.points.log10(player.points).sqrt().add(1)
-    document.getElementById("lup-eff5").textContent = "Currently: " + format(player.linear_upgrades.up5.eff) + "x boost"
-    player.linear_upgrades.up6.eff = player.LinearEssence.sqrt().div(2).add(1)
-    document.getElementById("lup-eff6").textContent = "Currently: " + format(player.linear_upgrades.up6.eff) + "x boost"
     document.getElementById("LP").textContent = format(player.LinearPower)
-    document.getElementById("LEequation-cost1").textContent = "Cost: " + format(player.equations.linear_equations.a.cost) 
-    + " Linear Power"
-    document.getElementById("LEequation-cost2").textContent = "Cost: " + format(player.equations.linear_equations.x.cost) 
-    + " Linear Power"
-    document.getElementById("LEequation-cost3").textContent = "Cost: " + format(player.equations.linear_equations.b.cost) 
-    + " Linear Power"
-    document.getElementById("LEequation-cost4").textContent = "Cost: " + format(player.equations.linear_equations.y.cost) 
-    + " Linear Power"
-    document.getElementById("LEequation-cost5").textContent = "Cost: " + format(player.equations.linear_equations.c.cost) 
-    + " Linear Power"
-    document.getElementById("LEequation").textContent = "ax + by + c = " + format(CalculateLEegain())
-    if(player.linear_upgrades.up3.bought === true) {
-        BuyClassmate()
-        BuyTeacher()
-        BuyProfessor()
-    }
+    document.getElementById("LEequation").textContent = "ax + by + c + 1 = " + format(CalculateLEegain()) 
     document.getElementById("LP-eff").textContent = "Multiplying your points, buildings, y boost by " 
-    + format(CalculateLEegain()) + "x, and x from 1st equation from 1st equation gets divided" 
-    + "by 4 everytime you reach a factor of 10"
-    player.equations.linear_equations.eff2 = player.equations.linear_equations.eff2.floor(player.equations.linear_equations.eff
-        .div(10))
-    player.linear_challenges.chal1.eff = player.buildings.Classmate.eff.pow(0.2).add(player.buildings.Teacher.eff.pow(0.2).add(
-        player.buildings.Professor.eff.pow(0.2)
-    ))
-    document.getElementById("Chal-reward").textContent = "Reward: Points are boosted by buildings. Currently: " +
-    format(player.linear_challenges.chal1.eff) + "x boost"
+    + format(CalculateLEegain()) + "x, and x from 1st equation gets divided" 
+    + " by 4 every time you reach a multiple of 10"
+    player.equations.linear_equations.eff2 = CalculateLEegain().div(10)
+    player.equations.linear_equations.eff2 = player.equations.linear_equations.eff2.floor()
     document.getElementById("gone-linear").textContent = "You have gone linear " + format(player.GoneLinear) + " times"
     document.getElementById("Time-in-linear").textContent = "You've spent " + format(player.TimeinLinear) + " seconds in linear run"
     document.getElementById("Fastest-linear").textContent = "Your fastest linear was " + format(player.FastestLinear) + " seconds"
-    if(player.upgrades.up3.bought === true) {
-        document.getElementById("Equation").classList.add("unlocked")
-    }
-    if(player.upgrades.up3.bought != true) {
-        document.getElementById("Equation").classList.remove("unlocked")
-    }
-    if(player.buildings.Classmate.amount.gte(1)) {
-        player.achievements.achv1.completed = true
-    }
-    if(player.buildings.Teacher.amount.gte(1)) {
-        player.achievements.achv2.completed = true
-    }
-    if(player.buildings.Professor.amount.gte(1)) {
-        player.achievements.achv3.completed = true
-    }
-    if(player.upgrades.up3.bought === true) {
-        player.achievements.achv4.completed = true
-    }
-    if(player.points.gte(1e6)) {
+    document.getElementById("Length-amt").textContent = "Each side is " + lengthFormat(player.polygons.length) + " long. (length)"
+    if(player.points.gte(3e5)) {
         document.getElementById("row2").classList.add("show")
         document.getElementById("note").style.visibility = "collapse"
-        player.achievements.achv5.completed = true
     }
-    if(player.achievements.achv5.completed === true) {
+    if(achievements[4].completed) {
         document.getElementById("achv-row2").classList.add("unlocked")
     }
-    if(player.points.gte(1e7)) {
-        player.achievements.achv6.completed = true
+    if (player.polygons.amount.gte(1)) {
+        const canvas = document.getElementById("polygoncanvas")
+        const ctx = canvas.getContext('2d')
+        ctx.clearRect(0, 0, canvas.width, canvas.height) // clear canvas
+        ctx.strokeStyle = 'white'
+        ctx.lineWidth = '10'
+        ctx.beginPath() 
+
+        if(player.polygons.sides.eq(3)) { // edge case bc the triangle is for some reason higher
+            ctx.moveTo(Math.sin(-(Math.PI))*170+200, Math.cos(-(Math.PI))*170+240) 
+            for(i = 1; i<player.polygons.sides+1; i++) {
+                ctx.lineTo(Math.sin(-(Math.PI)+(Math.PI*2/player.polygons.sides*i))*170+200, Math.cos(-(Math.PI)+(Math.PI*2/player.polygons.sides*i))*170+240)
+            }
+
+            ctx.lineTo(Math.sin(-(Math.PI))*170+200, Math.cos(-(Math.PI))*170+240)  
+        } else {
+            ctx.moveTo(Math.sin(-(Math.PI))*170+200, Math.cos(-(Math.PI))*170+200)  
+
+            for(i = 1; i<player.polygons.sides+1; i++) {
+                ctx.lineTo(Math.sin(-(Math.PI)+(Math.PI*2/player.polygons.sides*i))*170+200, Math.cos(-(Math.PI)+(Math.PI*2/player.polygons.sides*i))*170+200)
+            }
+
+            ctx.lineTo(Math.sin(-(Math.PI))*170+200, Math.cos(-(Math.PI))*170+200)  
+        }
+
+        ctx.stroke() 
     }
-    if(player.upgrades.up6.bought === true) {
-        document.getElementById("Equation2").classList.add("unlocked")
-        player.achievements.achv7.completed = true
+    if(player.polygons.dimensions.gte(3)) {
+        document.getElementById("Height").classList.add("show")
     }
-    if(player.upgrades.up6.bought != true) {
-        document.getElementById("Equation2").classList.remove("unlocked")
+    if(player.polygons.dimensions.gte(4)) {
+        document.getElementById("W-axis").classList.add("show")
     }
-    if(player.equations.equation2.y.gte(5)) {
-        player.achievements.achv8.completed = true
+    if(player.polygons.dimensions.gte(5)) {
+        document.getElementById("V-axis").classList.add("show")
     }
-    if(player.equations.equation2.x.gte(10)) {
-        player.achievements.achv9.completed = true
+    document.getElementById("polygon-buy").innerHTML = "Buy 1 regular polygon. <br> Cost: " + format(player.polygons.buyable1.cost) + " points"
+    document.getElementById("dimension-buy").innerHTML = "Increase the dimensions your regular polygon is in by 1. <br> Cost: " + format(player.polygons.buyable2.cost)
+        + " Linear Essence"
+    document.getElementById("Polygon-dimension").textContent = "Your regular polygon is in the " + player.polygons.dimensions + "-th dimension."
+    document.getElementById("Regular-polygons").textContent = "You have " + format(player.polygons.amount) + " regular polygons."
+    player.polygons.eff1 = player.polygons.length
+    player.polygons.eff2 = player.polygons.length.div(50).add(0.98)
+    player.polygons.eff3 = player.polygons.eff2.div(100).add(0.99)
+    player.polygons.eff4 = player.polygons.eff3.div(150).add(0.993)
+    player.polygons.eff5 = player.polygons.eff4.div(200).add(0.995)
+    document.getElementById("Lenght").textContent = "Your length boosts your points by " + format(player.polygons.eff1) + "x"
+    document.getElementById("Width").textContent = "Your width boosts your points by " + format(player.polygons.eff2) + "x"
+    document.getElementById("Height").textContent = "Your height boosts your points by " + format(player.polygons.eff3) + "x"
+    document.getElementById("W-axis").textContent = "Your w-axis boosts your points by " + format(player.polygons.eff4) + "x"
+    document.getElementById("V-axis").textContent = "Your v-axis boosts your points by " + format(player.polygons.eff5) + "x"
+    if(player.polygons.length.gte(1e3)) player.polygons.pboost1unl = true
+    if(player.polygons.length.gte(5e3)) player.polygons.pboost2unl = true
+    if(player.polygons.length.gte(2.5e4)) player.polygons.pboost3unl = true
+    if(player.polygons.length.gte(5e4)) player.polygons.pboost4unl = true
+    if(player.polygons.length.gte(1e5)) player.polygons.pboost5unl = true
+    if(player.polygons.pboost1unl) document.getElementById("p-boost1").textContent = "Unlock 3 new upgrades in upgrades tab." 
+    else document.getElementById("p-boost1").textContent = "Unlock polygon boost 1 on 1 femtometer of length."
+    if(player.polygons.pboost2unl) document.getElementById("p-boost2").textContent = "Unlock 2 more linear challenges."
+    else document.getElementById("p-boost2").textContent = "Unlock polygon boost 2 on 5 femtometer of length."
+    if(player.polygons.pboost3unl) document.getElementById("p-boost3").textContent = "Points get boosted based on regular polygons."
+    else document.getElementById("p-boost3").textContent = "Unlock polygon boost 3 on 25 femtometer of length."
+    if(player.polygons.pboost4unl) document.getElementById("p-boost4").textContent = "Your Linear Essence gets boosted by w-axis."
+    else document.getElementById("p-boost4").textContent = "Unlock polygon boost 4 on 50 femtometer of length."
+    if(player.polygons.pboost5unl) document.getElementById("p-boost5").textContent = "Your Linear power gets boosted by v-axis."
+    else document.getElementById("p-boost5").textContent = "Unlock polygon boost 5 on 100 femtometer of length."
+    if(player.polygons.pboost1unl) document.getElementById("row3").classList.add("show") 
+    if(player.polygons.pboost2unl) {
+        document.getElementById("Challenge5").classList.add("show")
+        document.getElementById("Challenge6").classList.add("show")
     }
-    if(player.LinearUnl === true) {
-        player.achievements.achv10.completed = true
-    }
-    if(player.linear_upgrades.up4.bought === true) {
-        player.achievements.achv11.completed = true
-    }
-    if(player.equations.linear_equations.eff.gte(10)) {
-        player.achievements.achv12.completed = true
-    }
-    if(player.linear_upgrades.up8.bought === true) {
-        player.achievements.achv13.completed = true
-    }
-    if(player.linear_challenges.chal1.completed === true && player.linear_challenges.chal2.completed === true &&
-        player.linear_challenges.chal3.completed === true
-    ) {
-        player.achievements.achv14.completed = true
+    if(upgrades[6].bought) {
+        document.getElementById("Bld-1").classList.add("hide")
+        document.getElementById("Building1").style.height = "90px"
     }
 }
 
 function UpdateStyles() {
-    if(player.points.gte(player.buildings.Classmate.cost)) {
-        document.getElementById("Building-cost").classList.remove("Building-cost")
-        document.getElementById("Building-cost").classList.add("Building-buy")
-    }
-    else {
-        document.getElementById("Building-cost").classList.add("Building-cost")
-        document.getElementById("Building-cost").classList.remove("Building-buy")
-    }
-    if(player.points.gte(player.buildings.Teacher.cost)) {
-        document.getElementById("Building-cost2").classList.remove("Building-cost")
-        document.getElementById("Building-cost2").classList.add("Building-buy")
-    }
-    else {
-        document.getElementById("Building-cost2").classList.add("Building-cost")
-        document.getElementById("Building-cost2").classList.remove("Building-buy")
-    }
-    if(player.points.gte(player.buildings.Professor.cost)) {
-        document.getElementById("Building-cost3").classList.remove("Building-cost")
-        document.getElementById("Building-cost3").classList.add("Building-buy")
-    }
-    else {
-        document.getElementById("Building-cost3").classList.add("Building-cost")
-        document.getElementById("Building-cost3").classList.remove("Building-buy")
-    }
-    if(player.points.gte(player.upgrades.up1.cost) && player.upgrades.up1.bought != true) {
-        document.getElementById("up-cost1").classList.remove("Up-cost")
-        document.getElementById("up-cost1").classList.add("Up-bought")
-    }
-    else if (player.upgrades.up1.bought === true) {
-        document.getElementById("up-cost1").classList.remove("Up-cost")
-        document.getElementById("up-cost1").classList.add("Up-buy")
-    }
-    else if (player.upgrades.up1.bought != true) {
-        document.getElementById("up-cost1").classList.add("Up-cost")
-        document.getElementById("up-cost1").classList.remove("Up-buy")
-        document.getElementById("up-cost1").classList.remove("Up-bought")
-    }
-    else if (player.points.lt(player.upgrades.up1.cost) && player.upgrades.up1.bought != true) {
-        document.getElementById("up-cost1").classList.add("Up-cost")
-        document.getElementById("up-cost1").classList.remove("Up-bought")
-    }
-    if(player.points.gte(player.upgrades.up2.cost) && player.upgrades.up2.bought != true) {
-        document.getElementById("up-cost2").classList.remove("Up-cost")
-        document.getElementById("up-cost2").classList.add("Up-bought")
-    }
-    else if (player.upgrades.up2.bought === true) {
-        document.getElementById("up-cost2").classList.remove("Up-cost")
-        document.getElementById("up-cost2").classList.add("Up-buy")
-    }
-    else if (player.upgrades.up2.bought != true) {
-        document.getElementById("up-cost2").classList.add("Up-cost")
-        document.getElementById("up-cost2").classList.remove("Up-buy")
-        document.getElementById("up-cost2").classList.remove("Up-bought")
-    }
-    else if (player.points.lt(player.upgrades.up2.cost) && player.upgrades.up2.bought != true) {
-        document.getElementById("up-cost2").classList.add("Up-cost")
-        document.getElementById("up-cost2").classList.remove("Up-bought")
-    }
-    if(player.points.gte(player.upgrades.up3.cost) && player.upgrades.up3.bought != true) {
-        document.getElementById("up-cost3").classList.remove("Up-cost")
-        document.getElementById("up-cost3").classList.add("Up-bought")
-    }
-    else if (player.upgrades.up3.bought === true) {
-        document.getElementById("up-cost3").classList.remove("Up-cost")
-        document.getElementById("up-cost3").classList.add("Up-buy")
-    }
-    else if (player.upgrades.up3.bought != true) {
-        document.getElementById("up-cost3").classList.add("Up-cost")
-        document.getElementById("up-cost3").classList.remove("Up-buy")
-        document.getElementById("up-cost3").classList.remove("Up-bought")
-    }
-    else if (player.points.lt(player.upgrades.up3.cost) && player.upgrades.up3.bought != true) {
-        document.getElementById("up-cost3").classList.add("Up-cost")
-        document.getElementById("up-cost3").classList.remove("Up-bought")
-    }
-    if(player.points.gte(player.upgrades.up4.cost) && player.upgrades.up4.bought != true) {
-        document.getElementById("up-cost4").classList.remove("Up-cost")
-        document.getElementById("up-cost4").classList.add("Up-bought")
-    }
-    else if (player.upgrades.up4.bought === true) {
-        document.getElementById("up-cost4").classList.remove("Up-cost")
-        document.getElementById("up-cost4").classList.add("Up-buy")
-    }
-    else if (player.upgrades.up4.bought != true) {
-        document.getElementById("up-cost4").classList.add("Up-cost")
-        document.getElementById("up-cost4").classList.remove("Up-buy")
-        document.getElementById("up-cost4").classList.remove("Up-bought")
-    }
-    else if (player.points.lt(player.upgrades.up4.cost) && player.upgrades.up1.bought != true) {
-        document.getElementById("up-cost4").classList.add("Up-cost")
-        document.getElementById("up-cost4").classList.remove("Up-bought")
-    }
-    if(player.points.gte(player.upgrades.up5.cost) && player.upgrades.up5.bought != true) {
-        document.getElementById("up-cost5").classList.remove("Up-cost")
-        document.getElementById("up-cost5").classList.add("Up-bought")
-    }
-    else if (player.upgrades.up5.bought === true) {
-        document.getElementById("up-cost5").classList.remove("Up-cost")
-        document.getElementById("up-cost5").classList.add("Up-buy")
-    }
-    else if (player.upgrades.up5.bought != true) {
-        document.getElementById("up-cost5").classList.add("Up-cost")
-        document.getElementById("up-cost5").classList.remove("Up-buy")
-        document.getElementById("up-cost5").classList.remove("Up-bought")
-    }
-    else if (player.points.lt(player.upgrades.up5.cost) && player.upgrades.up5.bought != true) {
-        document.getElementById("up-cost5").classList.add("Up-cost")
-        document.getElementById("up-cost5").classList.remove("Up-bought")
-    }
-    if(player.points.gte(player.upgrades.up6.cost) && player.upgrades.up6.bought != true) {
-        document.getElementById("up-cost6").classList.remove("Up-cost")
-        document.getElementById("up-cost6").classList.add("Up-bought")
-    }
-    else if (player.upgrades.up6.bought === true) {
-        document.getElementById("up-cost6").classList.remove("Up-cost")
-        document.getElementById("up-cost6").classList.add("Up-buy")
-    }
-    else if (player.upgrades.up6.bought != true) {
-        document.getElementById("up-cost6").classList.add("Up-cost")
-        document.getElementById("up-cost6").classList.remove("Up-buy")
-        document.getElementById("up-cost6").classList.remove("Up-bought")
-    }
-    else if (player.points.lt(player.upgrades.up6.cost) && player.upgrades.up6.bought != true) {
-        document.getElementById("up-cost6").classList.add("Up-cost")
-        document.getElementById("up-cost6").classList.remove("Up-bought")
-    }
-    if(player.LinearEssence.gte(player.linear_upgrades.up1.cost) && player.linear_upgrades.up1.bought != true) {
-        document.getElementById("lup-cost1").classList.remove("Lup-cost")
-        document.getElementById("lup-cost1").classList.add("Lup-bought")
-    }
-    else if (player.linear_upgrades.up1.bought === true) {
-        document.getElementById("lup-cost1").classList.remove("Lup-cost")
-        document.getElementById("lup-cost1").classList.add("Lup-buy")
-    }
-    else if (player.LinearEssence.lt(player.linear_upgrades.up1.cost) && player.linear_upgrades.up1.bought != true) {
-        document.getElementById("lup-cost2").classList.add("Lup-cost")
-        document.getElementById("lup-cost2").classList.remove("Lup-bought")
-    }
-    if(player.LinearEssence.gte(player.linear_upgrades.up2.cost) && player.linear_upgrades.up2.bought != true) {
-        document.getElementById("lup-cost2").classList.remove("Lup-cost")
-        document.getElementById("lup-cost2").classList.add("Lup-bought")
-    }
-    else if (player.linear_upgrades.up2.bought === true) {
-        document.getElementById("lup-cost2").classList.remove("Lup-cost")
-        document.getElementById("lup-cost2").classList.add("Lup-buy")
-    }
-    else if (player.LinearEssence.lt(player.linear_upgrades.up2.cost) && player.linear_upgrades.up2.bought != true) {
-        document.getElementById("lup-cost2").classList.add("Lup-cost")
-        document.getElementById("lup-cost2").classList.remove("Lup-bought")
-    }
-    if(player.LinearEssence.gte(player.linear_upgrades.up3.cost) && player.linear_upgrades.up3.bought != true) {
-        document.getElementById("lup-cost3").classList.remove("Lup-cost")
-        document.getElementById("lup-cost3").classList.add("Lup-bought")
-    }
-    else if (player.linear_upgrades.up3.bought === true) {
-        document.getElementById("lup-cost3").classList.remove("Lup-cost")
-        document.getElementById("lup-cost3").classList.add("Lup-buy")
-    }
-    else if (player.LinearEssence.lt(player.linear_upgrades.up3.cost) && player.linear_upgrades.up3.bought != true) {
-        document.getElementById("lup-cost3").classList.add("Lup-cost")
-        document.getElementById("lup-cost3").classList.remove("Lup-bought")
-    }
-    if(player.LinearEssence.gte(player.linear_upgrades.up4.cost) && player.linear_upgrades.up4.bought != true) {
-        document.getElementById("lup-cost4").classList.remove("Lup-cost")
-        document.getElementById("lup-cost4").classList.add("Lup-bought")
-    }
-    else if (player.linear_upgrades.up4.bought === true) {
-        document.getElementById("lup-cost4").classList.remove("Lup-cost")
-        document.getElementById("lup-cost4").classList.add("Lup-buy")
-    }
-    else if (player.LinearEssence.lt(player.linear_upgrades.up4.cost) && player.linear_upgrades.up4.bought != true) {
-        document.getElementById("lup-cost4").classList.add("Lup-cost")
-        document.getElementById("lup-cost4").classList.remove("Lup-bought")
-    }
-    if(player.LinearPower.gte(player.equations.linear_equations.a.cost)) {
-        document.getElementById("LEe-cost1").classList.remove("LEequation-cost")
-        document.getElementById("LEe-cost1").classList.add("LEequation-bought")
-    }
-    else {
-        document.getElementById("LEe-cost1").classList.add("LEequation-cost")
-        document.getElementById("LEe-cost1").classList.remove("LEequation-bought")
-    }
-    if(player.LinearPower.gte(player.equations.linear_equations.x.cost)) {
-        document.getElementById("LEe-cost2").classList.remove("LEequation-cost")
-        document.getElementById("LEe-cost2").classList.add("LEequation-bought")
-    }
-    else {
-        document.getElementById("LEe-cost2").classList.add("LEequation-cost")
-        document.getElementById("LEe-cost2").classList.remove("LEequation-bought")
-    }
-    if(player.LinearPower.gte(player.equations.linear_equations.b.cost)) {
-        document.getElementById("LEe-cost3").classList.remove("LEequation-cost")
-        document.getElementById("LEe-cost3").classList.add("LEequation-bought")
-    }
-    else {
-        document.getElementById("LEe-cost3").classList.add("LEequation-cost")
-        document.getElementById("LEe-cost3").classList.remove("LEequation-bought")
-    }
-    if(player.LinearPower.gte(player.equations.linear_equations.y.cost)) {
-        document.getElementById("LEe-cost4").classList.remove("LEequation-cost")
-        document.getElementById("LEe-cost4").classList.add("LEequation-bought")
-    }
-    else {
-        document.getElementById("LEe-cost4").classList.add("LEequation-cost")
-        document.getElementById("LEe-cost4").classList.remove("LEequation-bought")
-    }
-    if(player.LinearPower.gte(player.equations.linear_equations.c.cost)) {
-        document.getElementById("LEe-cost5").classList.remove("LEequation-cost")
-        document.getElementById("LEe-cost5").classList.add("LEequation-bought")
-    }
-    else {
-        document.getElementById("LEe-cost5").classList.add("LEequation-cost")
-        document.getElementById("LEe-cost5").classList.remove("LEequation-bought")
-    }
-    if(player.linear_challenges.chal1.inChal === true) {
-        document.getElementById("Challenge1").classList.add("Challenge-running")
-        document.getElementById("Challenge1").classList.remove("Challenge")
-    }
-    else if (player.linear_challenges.chal1.completed === true) {
-        document.getElementById("Challenge1").classList.add("Challenge-completed")
-        document.getElementById("Challenge1").classList.remove("Challenge-running")
-    }
-    else if(player.linear_challenges.chal1.inChal === false) {
-        document.getElementById("Challenge1").classList.add("Challenge")
-        document.getElementById("Challenge1").classList.remove("Challenge-running")
-    }
-    if(player.linear_challenges.chal2.inChal === true) {
-        document.getElementById("Challenge2").classList.add("Challenge-running")
-        document.getElementById("Challenge2").classList.remove("Challenge")
-    }
-    else if (player.linear_challenges.chal2.completed === true) {
-        document.getElementById("Challenge2").classList.add("Challenge-completed")
-        document.getElementById("Challenge2").classList.remove("Challenge-running")
-    }
-    else if(player.linear_challenges.chal2.inChal === false) {
-        document.getElementById("Challenge2").classList.add("Challenge")
-        document.getElementById("Challenge2").classList.remove("Challenge-running")
-    }
-    if(player.linear_challenges.chal3.inChal === true) {
-        document.getElementById("Challenge3").classList.add("Challenge-running")
-        document.getElementById("Challenge3").classList.remove("Challenge")
-    }
-    else if (player.linear_challenges.chal3.completed === true) {
-        document.getElementById("Challenge3").classList.add("Challenge-completed")
-        document.getElementById("Challenge3").classList.remove("Challenge-running")
-    }
-    else if(player.linear_challenges.chal3.inChal === false) {
-        document.getElementById("Challenge3").classList.add("Challenge")
-        document.getElementById("Challenge3").classList.remove("Challenge-running")
-    }
-    if(player.linear_challenges.chal4.inChal === true) {
-        document.getElementById("Challenge4").classList.add("Challenge-running")
-        document.getElementById("Challenge4").classList.remove("Challenge")
-    }
-    else if (player.linear_challenges.chal4.completed === true) {
-        document.getElementById("Challenge4").classList.add("Challenge-completed")
-        document.getElementById("Challenge4").classList.remove("Challenge-running")
-    }
-    else if(player.linear_challenges.chal4.inChal === false) {
-        document.getElementById("Challenge4").classList.add("Challenge")
-        document.getElementById("Challenge4").classList.remove("Challenge-running")
-    }
-    if(player.LinearUnl === true) {
+    for(let i = 0; i < 3; i++) {
+        let b = buildings[i]
+        if(player.points.gte(b.cost) && !linearChallenges[2].inChal && !linearChallenges[3].inChal) {
+            document.getElementById("Building-cost" + (i + 1)).classList.remove("Building-cost")
+            document.getElementById("Building-cost" + (i + 1)).classList.add("Building-buy")
+        }
+        else {
+            document.getElementById("Building-cost" + (i + 1)).classList.add("Building-cost")
+            document.getElementById("Building-cost" + (i + 1)).classList.remove("Building-buy")
+        }
+        if(linearUpgrades[2].bought) {
+            document.getElementById("Building-automation" + (i + 1)).classList.add("unlocked")
+        }
+    }
+    for(let i = 0; i < 9; i++) {
+        let u = upgrades[i]
+        if(player.points.lt(u.cost) && !u.bought) {
+            document.getElementById("up-cost" + (i + 1)).classList.add("Up-cost")
+            document.getElementById("up-cost" + (i + 1)).classList.remove("Up-bought")
+        }
+        if(player.points.gte(u.cost) && !u.bought) {
+            document.getElementById("up-cost" + (i + 1)).classList.remove("Up-cost")
+            document.getElementById("up-cost" + (i + 1)).classList.add("Up-bought")
+        }
+        if(u.bought) {
+            document.getElementById("up-cost" + (i + 1)).classList.remove("Up-cost")
+            document.getElementById("up-cost" + (i + 1)).classList.add("Up-buy")
+        }
+        else {
+            document.getElementById("up-cost" + (i + 1)).classList.add("Up-cost")
+            document.getElementById("up-cost" + (i + 1)).classList.remove("Up-buy")
+        }
+        if (linearChallenges[2].inChal || linearChallenges[3].inChal) {
+            document.getElementById("up-cost" + (i + 1)).classList.add("Up-cost")
+            document.getElementById("up-cost" + (i + 1)).classList.remove("Up-buy")
+            document.getElementById("up-cost" + (i + 1)).classList.remove("Up-bought")
+        }
+    }
+    for(let i = 0; i < 12; i++) {
+        let lu = linearUpgrades[i]
+        if(player.LinearEssence.lt(lu.cost) && !lu.bought) {
+            document.getElementById("lup-cost" + (i + 1)).classList.add("Lup-cost")
+            document.getElementById("lup-cost" + (i + 1)).classList.remove("Lup-bought")
+        }
+        if(player.LinearEssence.gte(lu.cost) && !lu.bought) {
+            document.getElementById("lup-cost" + (i + 1)).classList.remove("Lup-cost")
+            document.getElementById("lup-cost" + (i + 1)).classList.add("Lup-bought")
+        }
+        if(lu.bought) {
+            document.getElementById("lup-cost" + (i + 1)).classList.remove("Lup-cost")
+            document.getElementById("lup-cost" + (i + 1)).classList.add("Lup-buy")
+        }
+        else if(!lu.bought) {
+            document.getElementById("lup-cost" + (i + 1)).classList.add("Lup-cost")
+            document.getElementById("lup-cost" + (i + 1)).classList.remove("Lup-buy")
+        }
+    }
+    for(let i = 0; i < 6; i++) {
+        let lc = linearChallenges[i]
+        if (lc.completed) {
+            document.getElementById("Challenge" + (i + 1)).classList.add("Challenge-completed")
+            document.getElementById("Challenge" + (i + 1)).classList.remove("Challenge-running")
+        }
+        if(lc.inChal) {
+            document.getElementById("Challenge" + (i + 1)).classList.add("Challenge-running")
+            document.getElementById("Challenge" + (i + 1)).classList.remove("Challenge-completed")
+            document.getElementById("Challenge" + (i + 1)).classList.remove("Challenge")
+        }
+        else {
+            document.getElementById("Challenge" + (i + 1)).classList.add("Challenge")
+            document.getElementById("Challenge" + (i + 1)).classList.remove("Challenge-running")
+        }
+    }
+    for(let i = 0; i < 5; i++) {
+        let le = linearEquation[i]
+        if(player.LinearPower.gte(le.cost)) {
+            document.getElementById("LEe-cost" + (i + 1)).classList.remove("LEequation-cost")
+            document.getElementById("LEe-cost" + (i + 1)).classList.add("LEequation-bought")
+        }
+        else {
+            document.getElementById("LEe-cost" + (i + 1)).classList.add("LEequation-cost")
+            document.getElementById("LEe-cost" + (i + 1)).classList.remove("LEequation-bought")
+        }
+    }
+    for(let i = 0; i < 15; i++) {
+        let a = achievements[i]
+        if(a.completed) {
+            document.getElementById("Achv-" + (i + 1)).classList.add("completed")
+        }
+    }
+    
+    if(player.LinearUnl) {
         document.getElementById("Linear-statistics").classList.add("unlocked")
         document.getElementById("layertab").classList.add("unlocked")
         document.getElementById("achv-row3").classList.add("unlocked")
         document.getElementById("Linear-essence-guide").classList.add("unlocked")
     }
-    if(player.points.gte(1e10)) {
+    if(player.points.gte(5e10)) {
         document.getElementById("ResetForLE").classList.add("unlocked")
     }
-    if(player.linear_upgrades.up8.bought === true) {
+    if(linearUpgrades[7].bought) {
         document.getElementById("Chals-tab").classList.add("unlocked")
         document.getElementById("Linear-chals-guide").classList.add("unlocked")
     }
-    if(player.linear_upgrades.up4.bought === true) {
+    if(linearUpgrades[3].bought) {
         document.getElementById("NBuyer").classList.add("unlocked")
         document.getElementById("Lrow2").classList.add("unlocked")
     }
-    if(player.achievements.achv1.completed === true) {
-        document.getElementById("Achv-1").classList.add("completed")
+    if(linearChallenges[3].completed) {
+        document.getElementById("Lrow3").classList.add("unlocked")
     }
-    if(player.achievements.achv2.completed === true) {
-        document.getElementById("Achv-2").classList.add("completed")
+
+    if(player.points.gte(1e56) && player.LinearEssence.gte(2.5e5)) {
+        player.polygons.unlocked = true
     }
-    if(player.achievements.achv3.completed === true) {
-        document.getElementById("Achv-3").classList.add("completed")
+    if(linearUpgrades[11].bought) {
+        document.getElementById("Polygons-tab").classList.add("show")
     }
-    if(player.achievements.achv4.completed === true) {
-        document.getElementById("Achv-4").classList.add("completed")
+    if(player.polygons.unlocked) {
+        document.getElementById("polygoncanvas").classList.add("show")
+        document.getElementById("Buyables").classList.add("show")
+        document.getElementById("Polygon-amount").classList.add("show")
+        document.getElementById("polygon-info").classList.add("hide")
+        document.getElementById("Polygon-boosts").classList.add("show")
+        document.getElementById("Dimensions").classList.add("show")
     }
-    if(player.achievements.achv5.completed === true) {
-        document.getElementById("Achv-5").classList.add("completed")
-    }
-    if(player.achievements.achv6.completed === true) {
-        document.getElementById("Achv-6").classList.add("completed")
-    }
-    if(player.achievements.achv7.completed === true) {
-        document.getElementById("Achv-7").classList.add("completed")
-    }
-    if(player.achievements.achv8.completed === true) {
-        document.getElementById("Achv-8").classList.add("completed")
-    }
-    if(player.achievements.achv9.completed === true) {
-        document.getElementById("Achv-9").classList.add("completed")
-    }
-    if(player.achievements.achv10.completed === true) {
-        document.getElementById("Achv-10").classList.add("completed")
-    }
-    if(player.achievements.achv11.completed === true) {
-        document.getElementById("Achv-11").classList.add("completed")
-    }
-    if(player.achievements.achv12.completed === true) {
-        document.getElementById("Achv-12").classList.add("completed")
-    }
-    if(player.achievements.achv13.completed === true) {
-        document.getElementById("Achv-13").classList.add("completed")
-    }
-    if(player.achievements.achv14.completed === true) {
-        document.getElementById("Achv-14").classList.add("completed")
+    if(alertcontent) {
+        document.getElementById("Alert").style.display = "none"
     }
 }
 
@@ -489,67 +497,39 @@ var LastUpdate = Date.now()
 
 function CalculatePointGain() {
     let gain = new Decimal(0)
-    gain = gain.add(player.buildings.Classmate.amount.mul(player.buildings.Classmate.eff))
-    gain = gain.add(player.buildings.Teacher.amount.mul(player.buildings.Teacher.eff))
-    gain = gain.add(player.buildings.Professor.amount.mul(player.buildings.Professor.eff))
+    for(i = 0; i < 3; i++) {
+        let b = buildings[i]
+        gain = gain.add(b.amount.mul(b.eff))
+    }
     gain = gain.mul(player.equations.equation1.x)
     gain = gain.mul(CalculateLEegain())
-    if(player.upgrades.up4.bought === true) {
-        gain = gain.mul(player.upgrades.up4.eff)
+    if(linearUpgrades[0].bought && !linearChallenges[4].inChal) {
+        gain = gain.mul(linearUpgrades[0].eff)
     }
-    if(player.linear_upgrades.up1.bought === true) {
-        gain = gain.mul(player.linear_upgrades.up1.eff)
+    if(linearChallenges[0].inChal || linearChallenges[3].inChal) {
+        gain = gain.max(1).log10()
     }
-    if(player.linear_challenges.chal1.inChal === true || player.linear_challenges.chal4.inChal === true) {
-        gain = gain.add(1)
-        gain = gain.log10()
+    if(linearChallenges[0].completed) {
+        gain = gain.mul(linearChallenges[0].eff)
     }
-    if(player.linear_challenges.chal1.completed === true) {
-        gain = gain.mul(player.linear_challenges.chal1.eff)
+    if(linearUpgrades[9].bought && !linearChallenges[4].inChal) {
+        gain = gain.mul(linearUpgrades[9].eff)
     }
+    if(upgrades[3].bought) {
+        gain = gain.mul(upgrades[3].eff)
+    }
+    if(linearChallenges[5].inChal) {
+        gain = gain.div(buildings[0].amount.add(buildings[1].amount).add(buildings[2].amount).add(1)).add(1)
+    }
+    if(player.polygons.pboost3unl) {
+        gain = gain.mul(new Decimal(2).pow(player.polygons.amount))
+    }
+    if(player.polygons.pboost1unl) gain = gain.mul(player.polygons.eff1)
+    if(player.polygons.pboost2unl) gain = gain.mul(player.polygons.eff2)
+    if(player.polygons.pboost3unl) gain = gain.mul(player.polygons.eff3)
+    if(player.polygons.pboost4unl) gain = gain.mul(player.polygons.eff4)
+    if(player.polygons.pboost5unl) gain = gain.mul(player.polygons.eff5)
     return gain
-}
-
-function CalculateClassmateMult() {
-    let cmult = new Decimal(1)
-    cmult = cmult.mul(CalculateLEegain())
-    if(player.upgrades.up1.bought === true) {
-        cmult = cmult.mul(player.upgrades.up1.eff)
-    }
-    if(player.linear_upgrades.up2.bought === true) {
-        cmult = cmult.mul(5)
-    }
-    if(player.linear_upgrades.up5.bought === true) {
-        cmult = cmult.mul(player.linear_upgrades.up5.eff)
-    }
-    if(player.linear_challenges.chal3.completed === true) {
-        cmult = cmult.mul(3)
-    }
-    return cmult
-}
-
-function CalculateTeacherMult() {
-    let tmult = new Decimal(20)
-    tmult = tmult.mul(CalculateLEegain())
-    if(player.upgrades.up2.bought === true) {
-        tmult = tmult.mul(player.upgrades.up2.eff)
-    }
-    if(player.linear_upgrades.up5.bought === true) {
-        tmult = tmult.mul(player.linear_upgrades.up5.eff)
-    }
-    return tmult
-}
-
-function CalculateProfessorMult() {
-    let pmult = new Decimal(150)
-    pmult = pmult.mul(CalculateLEegain())
-    if(player.upgrades.up5.bought === true) {
-        pmult = pmult.mul(player.upgrades.up5.eff)
-    }
-    if(player.linear_upgrades.up5.bought === true) {
-        pmult = pmult.mul(player.linear_upgrades.up5.eff)
-    }
-    return pmult
 }
 
 function CalculateEquationGain() {
@@ -559,7 +539,7 @@ function CalculateEquationGain() {
         xeff = xeff.mul(new Decimal(2).pow(player.equations.equation2.y))
     }
     if(player.equations.linear_equations.eff2.gte(1)) {
-        xeff = xeff.mul(new Decimal(4).pow(player.equations.linear_equations.eff2.sub(1)))
+        xeff = xeff.mul(new Decimal(4).pow(player.equations.linear_equations.eff2))
     }
     return xeff
 }
@@ -567,10 +547,13 @@ function CalculateEquationGain() {
 function CalculateLEgain() {
     let LEgain = new Decimal(0)
     if(player.points.gte(1e10)) {
-        LEgain = new Decimal(new Decimal(1.1).pow((player.points.div(1e10)).pow(0.1).add(player.equations.equation1.x.pow(0.1))))
+        LEgain = new Decimal(new Decimal(1.5).pow((player.equations.equation2.y.div(20).sub(1))).mul(new Decimal(1.3).pow(player.equations.equation1.x.add(1).log10())))
     }
-    if(player.linear_upgrades.up6.bought === true) {
-        LEgain = LEgain.mul(player.linear_upgrades.up6.eff)
+    if(linearUpgrades[5].bought) {
+        LEgain = LEgain.mul(linearUpgrades[5].eff)
+    }
+    if(player.polygons.pboost4unl) {
+        LEgain = LEgain.mul(player.polygons.eff4.mul(5))
     }
     LEgain = LEgain.floor()
     return LEgain
@@ -579,29 +562,48 @@ function CalculateLEgain() {
 function CalculateLPgain() {
     let LPgain = new Decimal(0)
     LPgain = LPgain.add(CalculateLEegain())
+    if(linearUpgrades[10].bought) {
+        LPgain = LPgain.mul(linearUpgrades[10].eff)
+    }
     return LPgain
 }
 
 function CalculateLEegain() {
-    let LEegain = new Decimal(0)
-    LEegain = LEegain.add(player.equations.linear_equations.a.amount.mul(player.equations.linear_equations.x.amount)
-    .add(player.equations.linear_equations.b.amount.mul(player.equations.linear_equations.y.amount)).add(
-        player.equations.linear_equations.c.amount))
-    return LEegain
+    let LEegain = new Decimal(1)
+    if(!linearChallenges[4].inChal) LEegain = LEegain.add(linearEquation[1].amount.mul(linearEquation[4].amount).add(linearEquation[2].amount.mul(linearEquation[3].amount)).add(linearEquation[0].amount))
+    if(linearChallenges[4].completed) {
+        LEegain = LEegain.mul(linearChallenges[4].eff)
+    }
+    if(linearChallenges[5].completed) {
+        LEegain = LEegain.mul(1.5)
+    }
+    if(player.polygons.pboost5unl) {
+        LEegain = LEegain.mul(player.polygons.eff5)
+    }
+    return LEegain 
+}
+
+function CalculateLengthGain() {
+    let LengthGain = new Decimal(1)
+    LengthGain = LengthGain.add(player.polygons.amount)
+    return LengthGain
 }
 
 function productionLoop(diff) {
     player.points = player.points.add(player.pointsPerSec.mul(diff))
     player.pointsPerSec = CalculatePointGain()
     player.tpoints = player.tpoints.add(player.pointsPerSec.mul(diff))
-    player.buildings.Classmate.eff = CalculateClassmateMult()
-    player.buildings.Teacher.eff = CalculateTeacherMult()
-    player.buildings.Professor.eff = CalculateProfessorMult()
     player.equations.equation1.x = CalculateEquationGain()
-    if(player.LinearUnl === true) {
+    if(player.LinearUnl) {
         player.LinearPower = player.LinearPower.add(CalculateLPgain().mul(diff))
+        player.TimeinLinear = player.TimeinLinear.add(new Decimal(1).mul(diff))
     }
-    player.TimeinLinear = player.TimeinLinear.add(new Decimal(1).mul(diff))
+    if (player.polygons.amount.gte(1)) {
+        player.polygons.length = player.polygons.length.add(CalculateLengthGain().mul(diff))
+    }
+    if (upgrades[6].bought) {
+        buildings[0].amount = buildings[0].amount.add(buildings[1].amount.mul(diff))
+    }
 }
 
 function MainLoop() {

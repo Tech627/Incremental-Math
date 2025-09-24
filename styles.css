@@ -13,8 +13,38 @@ body.light {
     height: 100%;
 }
 
+.Alert {
+    width: 350px;
+    height: 160px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -175px;
+    margin-top: -80px;
+    background-color: rgb(63, 63, 63);
+    display: flex;
+    justify-content: center;
+}
+
+#alert-txt {
+    position: absolute;
+    top: 10;
+}
+
+#alert-desc {
+    position: absolute;
+    top: 35;
+}
+
+#alert-ok-button {
+    position: absolute;
+    right: 10;
+    bottom: 10;
+}
+
 .Building-cost {
     background-color: rgba(227, 0, 0, 0.855);
+    border: 2px solid maroon
 }
 
 .Building-cost:hover {
@@ -23,10 +53,15 @@ body.light {
 
 .Building-buy {
     background-color: rgb(1, 218, 27);
+    border: 2px solid rgb(0, 91, 11);
 }
 
 .Building-buy:hover {
     background-color: rgba(0, 189, 0, 0.9);
+}
+
+#Bld-1.hide {
+    visibility: hidden;
 }
 
 #sub-tabs {
@@ -55,9 +90,10 @@ body.light {
 
 #tab {
     width: 150px;
-    height: 60px;
-    background-color: rgba(74, 74, 74, 0.801);
-    color: white;
+    height: 50px;
+    background-color: rgba(43, 43, 43, 0.801);
+    color: rgb(135, 135, 135);
+    border: 1px solid rgb(78, 78, 78);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -81,8 +117,8 @@ body.light {
 #layertab.unlocked {
     display: block;
     width: 150px;
-    height: 60px;
-    background-color: rgba(14, 203, 58, 0.801);
+    height: 50px;
+    background-color: rgba(9, 101, 30, 0.801);
     color: white;
     display: flex;
     justify-content: center;
@@ -99,10 +135,12 @@ body.light {
 
 .sub-content {
     display: none;
+    position: relative;
 }
 
 .sub-content.active {
     display: block;
+    position: relative;
 }
 
 #s-text,
@@ -170,31 +208,47 @@ body.light {
     display: block;
 }
 
+#solved-equation {
+    color: rgb(87, 87, 87);
+    font-size: 14px;
+    margin-top: -10px;
+}
+
 #up-t {
     font-size: 25px;
     font-weight: bolder;
+    color: rgb(12, 187, 59); 
+    margin-bottom: 15px;  
+    text-shadow: 0 0 5px #04821f5b, 0 0 10px #05881d7c, 0 0 15px #068f2ca0, 0 0 20px #07993ade, 0 0 20px #00922e, 0 0 30px #08622a, 0 0 40px #06641d;
+}
+
+#note {
+    color: rgb(187, 103, 103);
 }
 
 .Up-cost {
     width: 300px;
     height: 130px;
-    background-color: rgba(227, 0, 0, 0.855);
+    background-color: rgba(128, 13, 13, 0.855);
+    border: 2px solid rgb(129, 35, 35);
     font-size: 13px;
+    color: rgb(204, 201, 201);
 }
 
 .Up-cost:hover {
-    background-color: rgba(185, 1, 1, 0.838);
+    background-color: rgba(148, 14, 14, 0.855);
 }
 
 .Up-bought {
     width: 300px;
     height: 130px;
-    background-color: rgb(1, 167, 218);
+    background-color: rgb(6, 61, 78);
+    border: 2px solid rgb(30, 135, 135);
     font-size: 13px;
 }
 
 .Up-bought:hover {
-    background-color: rgba(0, 142, 140, 0.9);
+    background-color: rgba(5, 86, 85, 0.9);
 }
 
 .Up-buy {
@@ -222,6 +276,17 @@ body.light {
     display: flex;
     justify-content: center;
     gap: 5px;
+}
+
+#row3 {
+    display: none;
+}
+
+#row3.show {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 25px;
 }
 
 .Achv {
@@ -290,12 +355,14 @@ body.light {
     align-items: center;
 }
 
-#Building {
+#Building1,
+#Building2,
+#Building3 {
     width: 300px;
     height: auto;
     padding-bottom: 5px;
     font-size: 17px;
-    background-color: rgba(227, 0, 0, 0.855);
+    background-color: rgba(68, 5, 5, 0.967);
     position: relative;
 }
 
@@ -325,15 +392,11 @@ body.light {
     height: 140px;
     font-size: 14px;
     font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    background-color: rgba(227, 0, 0, 0.855);
+    background-color: rgba(128, 13, 13, 0.855);
 }
 
 .Lup-cost:hover {
-    background-color: rgba(185, 1, 1, 0.838);
+    background-color: rgba(148, 14, 14, 0.855);
 }
 
 .Lup-bought {
@@ -341,15 +404,11 @@ body.light {
     height: 140px;
     font-size: 14px;
     font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    background-color: rgb(1, 167, 218);
+    background-color: rgb(6, 61, 78);
 }
 
 .Lup-bought:hover {
-    background-color: rgba(0, 142, 140, 0.9);
+    background-color: rgba(5, 86, 85, 0.9);
 }
 
 .Lup-buy {
@@ -357,10 +416,6 @@ body.light {
     height: 140px;
     font-size: 14px;
     font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
     background-color: rgb(1, 218, 27);
 }
 
@@ -378,6 +433,15 @@ body.light {
 }
 
 #Lrow2.unlocked {
+    display: flex;
+    justify-content: center;
+}
+
+#Lrow3 {
+    display: none;
+}
+
+#Lrow3.unlocked {
     display: flex;
     justify-content: center;
 }
@@ -450,7 +514,6 @@ body.light {
 }
 
 #Chals-tab.unlocked {
-    display: block;
     width: 150px;
     height: 30px;
     padding: 5px;
@@ -476,10 +539,6 @@ body.light {
     height: 200px;
     font-size: 15px;
     font-weight: bolder;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
     background-color: rgba(227, 0, 0, 0.855);
 }
 
@@ -492,10 +551,6 @@ body.light {
     height: 200px;
     font-size: 15px;
     font-weight: bolder;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
     background-color: rgb(214, 169, 4);
 }
 
@@ -508,15 +563,21 @@ body.light {
     height: 200px;
     font-size: 15px;
     font-weight: bolder;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
     background-color: rgb(1, 218, 27);
 }
 
 .Challenge-completed:hover {
     background-color: rgba(0, 189, 0, 0.9);
+}
+
+#Challenge5,
+#Challenge6 {
+    display: none;
+}
+
+#Challenge5.show,
+#Challenge6.show {
+    display: block;
 }
 
 #Guide {
@@ -540,18 +601,135 @@ body.light {
 }
 
 .Linear-essence-guide,
-.Linear-chals-guide {
+.Linear-chals-guide,
+.Polygons-guide {
     display: none;
 }
 
-.Linear-essence-guide.unlocked {
+.Linear-essence-guide.unlocked,
+.Linear-chals-guide.unlocked,
+.Polygons-guide {
     display: block;
     padding-top: 10px;
     color: rgb(8, 224, 84);
 }
 
-.Linear-chals-guide.unlocked {
+.Building-automation {
+    display: none;
+}
+
+.Building-automation.unlocked {
     display: block;
-    padding-top: 10px;
-    color: rgb(8, 224, 84);
+}
+
+#Polygons-tab {
+    width: 150px;
+    height: 30px;
+    padding: 5px;
+    background-color: rgba(14, 203, 58, 0.801);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+}
+
+#Polygons-tab.show {
+    visibility: visible;
+}
+
+#polygoncanvas {
+    visibility: hidden;
+}
+
+#polygoncanvas.show {
+    visibility: visible;
+}
+
+#polygon-info {
+    position: absolute;
+    left: 50%;
+    top: 50%; 
+    margin-left: -250px; 
+    margin-top: 150px;
+}
+
+#polygon-info.hide {
+    visibility: hidden;
+}
+
+#Polygon-amount {
+    position: absolute;
+    left: 50%;
+    top: 50%; 
+    margin-left: -135px; 
+    margin-top: 445px;
+    visibility: hidden;
+}
+
+#Polygon-amount.show {
+    visibility: visible;
+}
+
+#Dimensions {
+    width: 380px;
+    position: absolute;
+    right: 0;
+    margin-right: 160px;
+    top: 10;
+    visibility: hidden;
+}
+
+#Dimensions.show {
+    visibility: visible;
+}
+
+#Polygon-boosts {
+    width: 390px;
+    position: absolute;
+    right: 0;
+    margin-right: 160px;
+    top: 200;
+    visibility: hidden;
+}
+
+#Polygon-boosts.show {
+    visibility: visible;
+}
+
+#Buyables {
+    position: absolute;
+    left: 0;
+    margin-left: 200px;
+    margin-top: 10px;
+    display: none;
+}
+
+#Buyables.show {
+    display: block;
+}
+
+.buyable {
+    width: 260px;
+    height: 170px;
+    padding: 5px;
+    font-size: 15px;
+    font-weight: bolder;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: rgba(125, 125, 125, 0.855);
+}
+
+#Height,
+#W-axis,
+#V-axis {
+    display: none;
+}
+
+#Height.show,
+#W-axis.show,
+#V-axis.show {
+    display: block;
 }
