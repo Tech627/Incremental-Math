@@ -36,7 +36,7 @@ function Save() {
             saveitems("Lup" + (i + 1) + "bought", lu.bought)
             saveitems("Lup" + (i + 1) + "eff", lu.eff)
         }
-        for(let i = 0; i < 15; i++) {
+        for(let i = 0; i < 20; i++) {
             let a = achievements[i]
             saveitems("achv" + (i + 1) + "c", a.completed)
         }
@@ -78,6 +78,7 @@ function Save() {
         saveitems("pbuyable1c", player.polygons.buyable1.cost)
         saveitems("pbuyable2c", player.polygons.buyable2.cost)
         saveitems("alertcontent", alertcontent)
+        saveitems("LinearResetunl", LinearResetunl)
         player.saved = true
         if(player.saved === true) {
             document.getElementById("Save-notification").classList.add("save")
@@ -142,7 +143,7 @@ function Get() {
             lu.bought = GetItems("Lup" + (i + 1) + "bought", false)
             lu.eff = GetItems("Lup" + (i + 1) + "eff", true)
         }
-        for(let i = 0; i < 15; i++) {
+        for(let i = 0; i < 20; i++) {
             let a = achievements[i]
             a.completed = GetItems("achv" + (i + 1) + "c", false)
         }
@@ -184,6 +185,8 @@ function Get() {
         player.polygons.buyable1.cost = GetItems("pbuyable1c", true)
         player.polygons.buyable2.cost = GetItems("pbuyable2c", true)
         alertcontent = GetItems("alertcontent", false)
+        LinearResetunl = GetItems("LinearResetunl", false)
+        fixSave() 
     } else {
         Save()
     }}
@@ -194,6 +197,33 @@ function HardReset() {
         saveitems("firstload", true)
         location.reload(true)
     }
+}
+
+function fixSave() {
+    defaultData = player
+
+    fixData(defaultData, player)
+}
+
+function fixData(defaultData, newData) {
+  for (item in defaultData) {
+    if (defaultData[item] == null) {
+      if (newData[item] === undefined) newData[item] = null;
+    } else if (Array.isArray(defaultData[item])) {
+      if (newData[item] === undefined) newData[item] = defaultData[item];
+      else fixData(defaultData[item], newData[item]);
+    } else if (defaultData[item] instanceof Decimal) {
+      // Convert to Decimal
+      if (newData[item] === undefined) newData[item] = defaultData[item];
+      else newData[item] = new Decimal(newData[item]);
+    } else if (!!defaultData[item] && typeof defaultData[item] === "object") {
+      if (newData[item] === undefined || typeof defaultData[item] !== "object")
+        newData[item] = defaultData[item];
+      else fixData(defaultData[item], newData[item]);
+    } else {
+      if (newData[item] === undefined) newData[item] = defaultData[item];
+    }
+  }
 }
 
 function Export() {
@@ -209,4 +239,4 @@ function Import() {
     window.location.reload()
 }
 
-//setInterval(Save, 15000)
+setInterval(Save, 15000)

@@ -110,6 +110,37 @@ body.light {
     align-items: center;
 }
 
+#upgradetab {
+    width: 150px;
+    height: 50px;
+    background-color: rgba(43, 43, 43, 0.801);
+    color: rgb(135, 135, 135);
+    border: 1px solid rgb(78, 78, 78);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#upgradetab.available,
+#layertab.available {
+    border: 1px solid rgb(143, 26, 26);
+}
+
+#upgrade-available {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: absolute;
+    top: 47;
+    left: -3;
+    background-color: rgb(22, 185, 22);
+    display: none;
+}
+
+#upgrade-available.show {
+    display: block;
+}
+
 #layertab {
     display: none;
 }
@@ -123,6 +154,21 @@ body.light {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#lupgrade-available {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: absolute;
+    top: 97;
+    left: -3;
+    background-color: rgb(206, 35, 12);
+    display: none;
+}
+
+#lupgrade-available.show {
+    display: block;
 }
 
 .content {
@@ -330,6 +376,17 @@ body.light {
 }
 
 #achv-row3.unlocked {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+#achv-row4 {
+    display: none;
+}
+
+#achv-row4.unlocked {
     display: flex;
     justify-content: center;
     gap: 5px;
@@ -608,7 +665,7 @@ body.light {
 
 .Linear-essence-guide.unlocked,
 .Linear-chals-guide.unlocked,
-.Polygons-guide {
+.Polygons-guide.unlocked {
     display: block;
     padding-top: 10px;
     color: rgb(8, 224, 84);
@@ -631,11 +688,11 @@ body.light {
     display: flex;
     justify-content: center;
     align-items: center;
-    visibility: hidden;
+    display: none;
 }
 
 #Polygons-tab.show {
-    visibility: visible;
+    display: block;
 }
 
 #polygoncanvas {

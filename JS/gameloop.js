@@ -4,6 +4,7 @@ var linearUpgrades = []
 var achievements = []
 var linearChallenges = []
 var linearEquation = []
+let LinearResetunl = false
 
 for(let i = 0; i < 3; i++) {
     let building = {
@@ -34,7 +35,7 @@ for(let i = 0; i < 12; i++) {
     linearUpgrades.push(linearUpgrade)
 }
 
-for(let i = 0; i < 15; i++) {
+for(let i = 0; i < 20; i++) {
     let achievement = {
         completed: false,
     }
@@ -190,6 +191,16 @@ function UpdateGUI() {
         document.getElementById("LEequation-cost" + (i + 1)).textContent = "Cost: " + format(le.cost) + " Linear Power"
     }
 
+    if(LinearResetunl == "Error") {
+        LinearResetunl = false
+    }
+
+    for(let i = 0; i < 20; i++) {
+        if(achievements[i].completed == "Error") {
+            achievements[i].completed = false
+        }
+    }
+
     if(buildings[0].amount.gte(1)) {
         achievements[0].completed = true
     }
@@ -235,6 +246,15 @@ function UpdateGUI() {
     if(linearUpgrades[11].bought) {
         achievements[14].completed = true
     }
+    if(player.polygons.amount.gte(1)) {
+        achievements[15].completed = true
+    }
+    if(player.polygons.dimensions.gte(3)) {
+        achievements[16].completed = true
+    }
+    if(player.polygons.pboost2unl) achievements[17].completed = true
+    if(upgrades[6].bought) achievements[18].completed = true
+    if(player.polygons.pboost5unl) achievements[19].completed = true
 
     if(player.equations.equation1.x.eq(1)) {
         document.getElementById("Equation1").textContent = "1+x=2"
@@ -283,6 +303,9 @@ function UpdateGUI() {
     }
     if(achievements[4].completed) {
         document.getElementById("achv-row2").classList.add("unlocked")
+    }
+    if(achievements[14].completed) {
+        document.getElementById("achv-row4").classList.add("unlocked")
     }
     if (player.polygons.amount.gte(1)) {
         const canvas = document.getElementById("polygoncanvas")
@@ -376,6 +399,7 @@ function UpdateStyles() {
             document.getElementById("Building-automation" + (i + 1)).classList.add("unlocked")
         }
     }
+    let upgradenotification = false
     for(let i = 0; i < 9; i++) {
         let u = upgrades[i]
         if(player.points.lt(u.cost) && !u.bought) {
@@ -385,6 +409,7 @@ function UpdateStyles() {
         if(player.points.gte(u.cost) && !u.bought) {
             document.getElementById("up-cost" + (i + 1)).classList.remove("Up-cost")
             document.getElementById("up-cost" + (i + 1)).classList.add("Up-bought")
+            upgradenotification = true
         }
         if(u.bought) {
             document.getElementById("up-cost" + (i + 1)).classList.remove("Up-cost")
@@ -400,6 +425,15 @@ function UpdateStyles() {
             document.getElementById("up-cost" + (i + 1)).classList.remove("Up-bought")
         }
     }
+    if(upgradenotification) {
+        document.getElementById("upgradetab").classList.add("available")
+        document.getElementById("upgrade-available").classList.add("show")
+    }
+    else {
+        document.getElementById("upgradetab").classList.remove("available")
+        document.getElementById("upgrade-available").classList.remove("show")
+    }
+    let lupgradenotification = false
     for(let i = 0; i < 12; i++) {
         let lu = linearUpgrades[i]
         if(player.LinearEssence.lt(lu.cost) && !lu.bought) {
@@ -409,6 +443,7 @@ function UpdateStyles() {
         if(player.LinearEssence.gte(lu.cost) && !lu.bought) {
             document.getElementById("lup-cost" + (i + 1)).classList.remove("Lup-cost")
             document.getElementById("lup-cost" + (i + 1)).classList.add("Lup-bought")
+            lupgradenotification = true
         }
         if(lu.bought) {
             document.getElementById("lup-cost" + (i + 1)).classList.remove("Lup-cost")
@@ -418,6 +453,14 @@ function UpdateStyles() {
             document.getElementById("lup-cost" + (i + 1)).classList.add("Lup-cost")
             document.getElementById("lup-cost" + (i + 1)).classList.remove("Lup-buy")
         }
+    }
+    if(lupgradenotification) {
+        document.getElementById("layertab").classList.add("available")
+        document.getElementById("lupgrade-available").classList.add("show")
+    }
+    else {
+        document.getElementById("layertab").classList.remove("available")
+        document.getElementById("lupgrade-available").classList.remove("show")
     }
     for(let i = 0; i < 6; i++) {
         let lc = linearChallenges[i]
@@ -446,7 +489,7 @@ function UpdateStyles() {
             document.getElementById("LEe-cost" + (i + 1)).classList.remove("LEequation-bought")
         }
     }
-    for(let i = 0; i < 15; i++) {
+    for(let i = 0; i < 20; i++) {
         let a = achievements[i]
         if(a.completed) {
             document.getElementById("Achv-" + (i + 1)).classList.add("completed")
@@ -460,6 +503,9 @@ function UpdateStyles() {
         document.getElementById("Linear-essence-guide").classList.add("unlocked")
     }
     if(player.points.gte(5e10)) {
+        LinearResetunl = true
+    }
+    if(LinearResetunl) {
         document.getElementById("ResetForLE").classList.add("unlocked")
     }
     if(linearUpgrades[7].bought) {
@@ -473,7 +519,6 @@ function UpdateStyles() {
     if(linearChallenges[3].completed) {
         document.getElementById("Lrow3").classList.add("unlocked")
     }
-
     if(player.points.gte(1e56) && player.LinearEssence.gte(2.5e5)) {
         player.polygons.unlocked = true
     }
@@ -487,6 +532,7 @@ function UpdateStyles() {
         document.getElementById("polygon-info").classList.add("hide")
         document.getElementById("Polygon-boosts").classList.add("show")
         document.getElementById("Dimensions").classList.add("show")
+        document.getElementById("Polygons-guide").classList.add("unlocked")
     }
     if(alertcontent) {
         document.getElementById("Alert").style.display = "none"
