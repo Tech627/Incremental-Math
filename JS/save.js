@@ -79,6 +79,7 @@ function Save() {
         saveitems("pbuyable2c", player.polygons.buyable2.cost)
         saveitems("alertcontent", alertcontent)
         saveitems("LinearResetunl", LinearResetunl)
+        saveitems("softcapunl", player.softcapunl)
         player.saved = true
         if(player.saved === true) {
             document.getElementById("Save-notification").classList.add("save")
@@ -186,6 +187,7 @@ function Get() {
         player.polygons.buyable2.cost = GetItems("pbuyable2c", true)
         alertcontent = GetItems("alertcontent", false)
         LinearResetunl = GetItems("LinearResetunl", false)
+        player.softcapunl = GetItems("softcapunl", false)
         fixSave() 
     } else {
         Save()

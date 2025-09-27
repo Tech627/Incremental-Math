@@ -15,6 +15,9 @@ let player = {
     saved: false,
     tbuildings: new Decimal(0),
     lc5eff: new Decimal(1),
+    softcapunl: false,
+    TimeTillReset: new Decimal(5),
+    Linearup3reset: false,
     equations: {
         equation1: {
             eff: new Decimal(1),
@@ -25,10 +28,10 @@ let player = {
             k: new Decimal(1),
             x: new Decimal(0),
             n: new Decimal(1),
-            y: new Decimal(1)
+            y: new Decimal(1),
         },  
         multiplicator1: {
-            cost: new Decimal(2e5),
+            cost: new Decimal(1.25e5),
         },
         xbuyer: {
             cost: new Decimal(1e8),
@@ -221,7 +224,8 @@ function BuyLup(i) {
 }
 
 function LinearEssenceReset(chal = false) {
-    if(player.LEgain.gte(1) || chal) {
+    if(player.LEgain.gte(1) && player.TimeTillReset.lte(0) || chal) {
+        player.TimeTillReset = new Decimal(5)
         player.LinearEssence = player.LinearEssence.add(player.LEgain)
         player.points = new Decimal(0)
         player.pointsPerSec = new Decimal(0)
@@ -230,27 +234,36 @@ function LinearEssenceReset(chal = false) {
             b.amount = new Decimal(0)
             b.cost = new Decimal(10).pow(i + 1)
             b.eff = new Decimal(1)
+            if(upgrades[6].bought) {
+                buildings[1].amount = new Decimal(1)
+            }
         }
         if(linearUpgrades[6].bought == false || linearChallenges[1].inChal == true) {
-            for(let i = 0; i < 6; i++) {
+            for(let i = 0; i < 9; i++) {
                 let u = upgrades[i]
                 u.bought = false
                 u.cost = new Decimal(20000)
                 u.eff = new Decimal(1)
+                if(linearUpgrades[2].bought) {
+                    upgrades[2].bought = true
+                    upgrades[5].bought = true
+                }
             }
         }
-        player.equations.equation1.eff = new Decimal(1)
-        player.equations.equation1.x = new Decimal(1)
-        player.equations.equation2.eff = new Decimal(1)
+        if(!linearUpgrades[2].bought) {
+            player.equations.equation1.x = new Decimal(1)
+            player.equations.equation2.x = new Decimal(0)
+            player.equations.equation2.n = new Decimal(1)
+            player.equations.equation2.y = new Decimal(1)
+            player.equations.multiplicator1.cost = new Decimal(1.25e5)
+            player.equations.xbuyer.cost = new Decimal(1e8)
+            player.equations.xbuyer.amount = new Decimal(0)
+            player.equations.nbuyer.cost = new Decimal(1e12)
+            player.equations.nbuyer.amount = new Decimal(0)
+            player.equations.equation1.eff = new Decimal(1)
+            player.equations.equation2.eff = new Decimal(1)
+        }
         player.equations.equation2.k = new Decimal(1)
-        player.equations.equation2.x = new Decimal(0)
-        player.equations.equation2.n = new Decimal(1)
-        player.equations.equation2.y = new Decimal(1)
-        player.equations.multiplicator1.cost = new Decimal(2e5)
-        player.equations.xbuyer.cost = new Decimal(1e8)
-        player.equations.xbuyer.amount = new Decimal(0)
-        player.equations.nbuyer.cost = new Decimal(1e12)
-        player.equations.nbuyer.amount = new Decimal(0)
         player.GoneLinear = player.GoneLinear.add(1)
         if(player.TimeinLinear.gte(player.FastestLinear)) {
             player.FastestLinear = player.TimeinLinear

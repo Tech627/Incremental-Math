@@ -17,6 +17,7 @@
         <button class="tab-btn" id="tab"> Statistics </button>
         <button class="tab-btn" id="tab"> Guide </button>
         <button class="tab-btn" id="tab"> Achievements </button>
+        <button class="tab-btn" id="softcaptab"> Softcaps </button>
     </div>
     <div class="btn-group" id="contenttabs">
         <button class="tab-btn" id="tab"> Main </button>
@@ -32,7 +33,7 @@
         <button class="btn btn-secondary" id="btn-gain" onclick="GetPoints()"> +1 Points </button>
     </div>
     <div class="text-center p-1" id="ResetForLE" onclick="LinearEssenceReset()">
-        <button class="btn"> Reset for 0 Linear essence </button>
+        <button class="btn" id="LinearReset"> Reset for 0 Linear essence </button>
     </div>
     <div class="content">
         <div class="container">
@@ -110,8 +111,11 @@
                     </div>
                     <div class="Polygons-guide" id="Polygons-guide"> <strong> Polygons </strong> 
                         <br> Polygons are the 4th mechanic of the game you buy a regular polygon from the 1st buyable. Proceed getting 
-                        length to increase your points. Continue like that and buy dimensions to increase in what dimension your polygon 
-                        is! Polygon boosts get unlocked after you reach a certain amount of length. That's it as of v0.2.1
+                        length after buying 1 regular polygon to increase your points. Continue like that and buy dimensions to increase
+                        in what dimension your polygon is! Polygon boosts get unlocked after you reach a certain amount of length. 
+                        Dimensions after unlocking v-axis don't have much of a use but will when v0.2.2 comes so if you come to the v-axis
+                        there is no need to buy more dimensions and I would probably announce the endgame when you unlock the polygon boost
+                        3 since that's the last boost that gives at least somewhat of a boost. That's it as of v0.2.1
                     </div>
                 </div>
             </div>
@@ -252,6 +256,47 @@
         </div>
     </div>
     <div class="content">
+        <div class="container pt-4">
+            <div class="text-center" id="softcaps">
+                <h6> <strong> Equation 1 softcap: </strong>
+                    <br>- When x is higher than 1e20: multiplied by 30
+                    <br>- When x is higher than 1e70: multiplied by 150    
+                </h6>
+                <h6> <strong> Equation 2 softcap: </strong>
+                    <br> X buyable:
+                        <br>- When you have more than 20 X: multiplied by 500
+                        <br>- When you have more than 100 X: multiplied by 1e4
+                    <br> N buyable:
+                        <br>- When you have more than 20 N: multiplied by 1000
+                </h6>
+                <h6 id="LEs"> <strong class="text-success"> Linear Equation softcap: </strong> 
+                    <br> C buyable:
+                        <br>- When you have more than 10 C: multiplied by 2.5
+                        <br>- When you have more than 25 C: multiplied by 50
+                    <br> A buyable:
+                        <br>- When you have more than 5 A: multiplied by 5
+                        <br>- When you have more than 15 A: multiplied by 100
+                    <br> B buyable: 
+                        <br>- When you have more than 5 B: multiplied by 10
+                        <br>- When you have more than 15 B: multiplied by 200
+                    <br> Y buyable: 
+                        <br>- When you have more than 5 Y: multiplied by 20
+                        <br>- When you have more than 15 Y: multiplied by 500
+                    <br> X buyable:
+                        <br>- When you have more than 5 X: multiplied by 35
+                        <br>- When you have more than 15 X: multiplied 1000
+                </h6>
+                <h6 id="Ps"> <strong class="text-success"> Polygons softcap: </strong>
+                    <br> Dimensions:
+                        <br>- When you are in 2nd dimension: multiplied by 500
+                        <br>- When you are in 3rd dimension: multiplied by 20
+                        <br>- When you are in 4th dimension: multiplied by 7
+                        <br>- When you are in 5th dimension: multiplied by 10
+                </h6>
+            </div>
+        </div>
+    </div>
+    <div class="content">
         <div class="container pt-5">
             <div class="container d-flex justify-content-center">
                 <div class="container" id="Building1">
@@ -363,7 +408,7 @@
                 <div class="container" id="row3">
                     <button class="Up-cost" id="up-cost7" onclick="BuyUp(7)">
                         <div id="up-name"> [Study more] </div>
-                        <div id="up-desc"> Start to generate Classmates from Teachers </div>
+                        <div id="up-desc"> Start to generate Classmates from Teachers. Additionally start with 1 Teacher on reset </div>
                         <div id="up-eff7"></div>
                         <div id="up-cost7"> Cost: 1e85 Points </div>
                     </button>
@@ -410,7 +455,7 @@
                         </button>
                         <button class="Lup-cost" id="lup-cost3" onclick="BuyLup(3)">
                             <div id="lup-name"> [Automation Age] </div>
-                            <div id="lup-desc3"> Automate Buildings </div>
+                            <div id="lup-desc3"> Automate Buildings and Keep Equation 1 X and Equation 2 X and N on reset </div>
                             <div id="lup-cost3"> Cost: 3 Linear Essence </div>
                         </button>
                         <button class="Lup-cost" id="lup-cost4" onclick="BuyLup(4)">
@@ -483,22 +528,27 @@
                             <button class="LEequation-cost" id="LEe-cost1" onclick="BuyLEVar(1)">
                                 <div id="LEequation-desc"> Buy an c </div>
                                 <div id="LEequation-cost1"> Cost: 500 Linear Power </div>
+                                <div id="LEequation-amt1"> You have 0 </div>c
                             </button>
                             <button class="LEequation-cost" id="LEe-cost2" onclick="BuyLEVar(2)">
                                 <div id="LEequation-desc"> Buy an a </div>
                                 <div id="LEequation-cost2"> Cost: 100 Linear Power </div>
+                                <div id="LEequation-amt2"> You have 0 </div>a
                             </button>
                             <button class="LEequation-cost" id="LEe-cost3" onclick="BuyLEVar(3)">
                                 <div id="LEequation-desc"> Buy an b </div>
                                 <div id="LEequation-cost3"> Cost: 1000 Linear Power </div>
+                                <div id="LEequation-amt3"> You have 0 </div>b
                             </button>
                             <button class="LEequation-cost" id="LEe-cost4" onclick="BuyLEVar(4)">
                                 <div id="LEequation-desc"> Buy an y </div>
                                 <div id="LEequation-cost4"> Cost: 100,000 Linear Power </div>
+                                <div id="LEequation-amt4"> You have 0 </div>y
                             </button>
                             <button class="LEequation-cost" id="LEe-cost5" onclick="BuyLEVar(5)">
                                 <div id="LEequation-desc"> Buy an x </div>
                                 <div id="LEequation-cost5"> Cost: 1e6 Linear Power </div>
+                                <div id="LEequation-amt5"> You have 0 </div>x
                             </button>
                         </div>
                     </div>
@@ -527,13 +577,13 @@
                             <button class="Challenge" id="Challenge3" onclick="EnterChal(3)">
                                 <div id="Chal-name"> [They're useless anyways] </div>
                                 <div id="Chal-desc"> You can't buy any buildings (Classmates, Teachers, Professors). </div>
-                                <div id="Chal-goal"> Goal: 10,000 Points </div>
+                                <div id="Chal-goal"> Goal: 300 Points </div>
                                 <div id="Chal-reward3"> Reward: Classmates get a boost. Currently: 3x boost </div>
                             </button>
                             <button class="Challenge" id="Challenge4" onclick="EnterChal(4)">
                                 <div id="Chal-name"> [Combined = fun?] </div>
                                 <div id="Chal-desc"> All previous challenges all at once. </div>
-                                <div id="Chal-goal"> Goal: 5,000 Points </div>
+                                <div id="Chal-goal"> Goal: 500 Points </div>
                                 <div id="Chal-reward4"> Reward: Unlock new Linear Upgrades </div>
                             </button>
                             <button class="Challenge" id="Challenge5" onclick="EnterChal(5)">
@@ -580,12 +630,19 @@
                     <div id="Polygon-boost"> Polygon boosts: </div>
                     <div id="p-boost1"> Unlock 3 more upgrades in upgrades tab. </div>
                     <div id="p-boost2"> Unlock 2 more linear challenges. </div>
-                    <div id="p-boost3"> Points get boosted based on regular polygons. </div>
-                    <div id="p-boost4"> Your Linear Essence gets boosted based on w-axis. </div>
-                    <div id="p-boost5"> Your Linear power gets boosted based on v-axis. </div>
+                    <div id="p-boost3"> Points get boosted based on regular polygons.
+                        <br> Currently: 1x boost    
+                    </div>
+                    <div id="p-boost4"> Your Linear Essence gets boosted based on w-axis.
+                        <br> Currently: 1x boost     
+                    </div>
+                    <div id="p-boost5"> Your Linear power gets boosted based on v-axis.
+                        <br> Currently: 1x boost    
+                    </div>
                 </div>
                 <div class="text-center" id="Dimensions"> 
                     <div id="Length-amt"> Each side is 1 attometer long. (length) </div> 
+                    <div class="text-secondary h6" id="Length-persec"> (You are increasing the Length by +0/sec) </div>
                     <div id="Dimension-boosts"> Dimension boosts: </div>
                     <div id="Lenght"> Your length boosts Points by 1x. </div>
                     <div id="Width"> Your width boosts Points by 1x. </div>

@@ -5,6 +5,7 @@ var achievements = []
 var linearChallenges = []
 var linearEquation = []
 let LinearResetunl = false
+let lockedlu3reset = false
 
 for(let i = 0; i < 3; i++) {
     let building = {
@@ -171,8 +172,8 @@ function UpdateGUI() {
     for(let i = 0; i < 6; i++) {
         linearChallenges[0].goal = new Decimal(3e3)
         linearChallenges[1].goal = new Decimal(1e13)
-        linearChallenges[2].goal = new Decimal(1e4)
-        linearChallenges[3].goal = new Decimal(5e3)
+        linearChallenges[2].goal = new Decimal(300)
+        linearChallenges[3].goal = new Decimal(500)
         linearChallenges[4].goal = new Decimal(1e45)
         linearChallenges[5].goal = new Decimal(1e110)
         linearChallenges[0].eff = buildings[0].eff.pow(0.2).add(buildings[1].eff.pow(0.2).add(buildings[2].eff.pow(0.2)))
@@ -189,6 +190,7 @@ function UpdateGUI() {
     for(let i = 0; i < 5; i++) {
         let le = linearEquation[i]
         document.getElementById("LEequation-cost" + (i + 1)).textContent = "Cost: " + format(le.cost) + " Linear Power"
+        document.getElementById("LEequation-amt" + (i + 1)).innerHTML = "You have " + formatWhole(le.amount)
     }
 
     if(LinearResetunl == "Error") {
@@ -234,7 +236,7 @@ function UpdateGUI() {
     if(linearUpgrades[3].bought) {
         achievements[10].completed = true
     }
-    if(player.equations.linear_equations.eff2.gte(10)) {
+    if(CalculateLEegain().gte(10)) {
         achievements[11].completed = true
     }
     if(linearUpgrades[7].bought) {
@@ -262,6 +264,33 @@ function UpdateGUI() {
     else {
         document.getElementById("Equation1").textContent = "1+(x/" + format(CalculateEquationGain(), precision = 0) + ")=2"
     }
+    document.getElementById("LinearReset").textContent = "Reset for " + format(CalculateLEgain()) + " Linear Essence"
+    if(linearUpgrades[2].bought) {
+        if(player.TimeinLinear.lt(5)) {
+            document.getElementById("LinearReset").textContent = "You can reset in " + formatTime(player.TimeTillReset)
+        }
+        else {
+            document.getElementById("LinearReset").textContent = "Reset for " + format(CalculateLEgain()) + " Linear Essence"
+        }
+    }
+    if(linearUpgrades[2].bought && !lockedlu3reset) {
+        player.Linearup3reset = true
+    }
+    if(player.Linearup3reset) {
+        player.equations.equation1.x = new Decimal(1)
+        player.equations.equation2.x = new Decimal(0)
+        player.equations.equation2.n = new Decimal(1)
+        player.equations.equation2.y = new Decimal(1)
+        player.equations.multiplicator1.cost = new Decimal(1.25e5)
+        player.equations.xbuyer.cost = new Decimal(1e8)
+        player.equations.xbuyer.amount = new Decimal(0)
+        player.equations.nbuyer.cost = new Decimal(1e12)
+        player.equations.nbuyer.amount = new Decimal(0)
+        player.equations.equation1.eff = new Decimal(1)
+        player.equations.equation2.eff = new Decimal(1)
+        player.Linearup3reset = false
+        lockedlu3reset = true
+    }
     document.getElementById("Equation1-boost").textContent = "x = " + format(CalculateEquationGain(), precision = 0) + " -> " + format(CalculateEquationGain()) + "x to your point production"
     document.getElementById("mult-cost").textContent = "Cost: " + format(player.equations.multiplicator1.cost) + " Points"
     if(player.equations.equation2.y.gt(1)) {
@@ -282,7 +311,6 @@ function UpdateGUI() {
     }
     document.getElementById("total-p").textContent = "Your total points is " + format(player.tpoints)
     document.getElementById("total-b-bought").textContent = "You bought a total of " + format(player.tbuildings) + " buildings"
-    document.getElementById("ResetForLE").textContent = "Reset for " + format(CalculateLEgain()) + " Linear Essence"
     player.LEgain = CalculateLEgain()
     document.getElementById("Linear-essence").textContent = "You have " + format(player.LinearEssence) + " linear essence"
     document.getElementById("mult-cost3").textContent = "Cost: " + format(player.equations.nbuyer.cost) + " Points"
@@ -354,6 +382,7 @@ function UpdateGUI() {
     player.polygons.eff4 = player.polygons.eff3.div(150).add(0.993)
     player.polygons.eff5 = player.polygons.eff4.div(200).add(0.995)
     document.getElementById("Lenght").textContent = "Your length boosts your points by " + format(player.polygons.eff1) + "x"
+    document.getElementById("Length-persec").textContent = "(You are increasing the length by +" + format(CalculateLengthGain()) + "/sec)"
     document.getElementById("Width").textContent = "Your width boosts your points by " + format(player.polygons.eff2) + "x"
     document.getElementById("Height").textContent = "Your height boosts your points by " + format(player.polygons.eff3) + "x"
     document.getElementById("W-axis").textContent = "Your w-axis boosts your points by " + format(player.polygons.eff4) + "x"
@@ -367,11 +396,14 @@ function UpdateGUI() {
     else document.getElementById("p-boost1").textContent = "Unlock polygon boost 1 on 1 femtometer of length."
     if(player.polygons.pboost2unl) document.getElementById("p-boost2").textContent = "Unlock 2 more linear challenges."
     else document.getElementById("p-boost2").textContent = "Unlock polygon boost 2 on 5 femtometer of length."
-    if(player.polygons.pboost3unl) document.getElementById("p-boost3").textContent = "Points get boosted based on regular polygons."
+    if(player.polygons.pboost3unl) document.getElementById("p-boost3").innerHTML = "Points get boosted based on regular polygons. <br> Currently: "
+     + format(new Decimal(2).pow(player.polygons.amount)) + "x boost"
     else document.getElementById("p-boost3").textContent = "Unlock polygon boost 3 on 25 femtometer of length."
-    if(player.polygons.pboost4unl) document.getElementById("p-boost4").textContent = "Your Linear Essence gets boosted by w-axis."
+    if(player.polygons.pboost4unl) document.getElementById("p-boost4").innerHTML = "Your Linear Essence gets boosted by w-axis. <br> Currently: " 
+     + format(player.polygons.eff4.mul(5)) + "x boost"
     else document.getElementById("p-boost4").textContent = "Unlock polygon boost 4 on 50 femtometer of length."
-    if(player.polygons.pboost5unl) document.getElementById("p-boost5").textContent = "Your Linear power gets boosted by v-axis."
+    if(player.polygons.pboost5unl) document.getElementById("p-boost5").innerHTML = "Your Linear power gets boosted by v-axis. <br> Currently: "
+     + format(player.polygons.eff5) + "x boost"
     else document.getElementById("p-boost5").textContent = "Unlock polygon boost 5 on 100 femtometer of length."
     if(player.polygons.pboost1unl) document.getElementById("row3").classList.add("show") 
     if(player.polygons.pboost2unl) {
@@ -464,11 +496,16 @@ function UpdateStyles() {
     }
     for(let i = 0; i < 6; i++) {
         let lc = linearChallenges[i]
+        if(player.points.gte(lc.goal)) {
+            document.getElementById("Challenge" + (i + 1)).classList.add("beatable")
+            document.getElementById("Challenge" + (i + 1)).classList.remove("Challenge-running")
+        }
         if (lc.completed) {
             document.getElementById("Challenge" + (i + 1)).classList.add("Challenge-completed")
             document.getElementById("Challenge" + (i + 1)).classList.remove("Challenge-running")
+            document.getElementById("Challenge" + (i + 1)).classList.remove("beatable")
         }
-        if(lc.inChal) {
+        if(lc.inChal && player.points.lt(lc.goal)) {
             document.getElementById("Challenge" + (i + 1)).classList.add("Challenge-running")
             document.getElementById("Challenge" + (i + 1)).classList.remove("Challenge-completed")
             document.getElementById("Challenge" + (i + 1)).classList.remove("Challenge")
@@ -494,6 +531,9 @@ function UpdateStyles() {
         if(a.completed) {
             document.getElementById("Achv-" + (i + 1)).classList.add("completed")
         }
+        else {
+            document.getElementById("Achv-" + (i + 1)).classList.remove("completed")
+        }
     }
     
     if(player.LinearUnl) {
@@ -501,6 +541,7 @@ function UpdateStyles() {
         document.getElementById("layertab").classList.add("unlocked")
         document.getElementById("achv-row3").classList.add("unlocked")
         document.getElementById("Linear-essence-guide").classList.add("unlocked")
+        document.getElementById("LEs").classList.add("show")
     }
     if(player.points.gte(5e10)) {
         LinearResetunl = true
@@ -533,9 +574,28 @@ function UpdateStyles() {
         document.getElementById("Polygon-boosts").classList.add("show")
         document.getElementById("Dimensions").classList.add("show")
         document.getElementById("Polygons-guide").classList.add("unlocked")
+        document.getElementById("Ps").classList.add("show")
     }
     if(alertcontent) {
         document.getElementById("Alert").style.display = "none"
+    }
+    if(player.equations.equation1.x.gte(1e20)) {
+        player.softcapunl = true
+    }
+    if(player.softcapunl) {
+        document.getElementById("softcaptab").classList.add("show")
+    }
+    if(player.points.gte(player.polygons.buyable1.cost)) {
+        document.getElementById("polygon-buy").classList.add("available")
+    }
+    else {
+        document.getElementById("polygon-buy").classList.remove("available")
+    }
+    if(player.LinearEssence.gte(player.polygons.buyable2.cost)) {
+        document.getElementById("dimension-buy").classList.add("available")
+    }
+    else {
+        document.getElementById("dimension-buy").classList.remove("available")
     }
 }
 
@@ -592,7 +652,7 @@ function CalculateEquationGain() {
 
 function CalculateLEgain() {
     let LEgain = new Decimal(0)
-    if(player.points.gte(1e10)) {
+    if(player.points.gte(1e10) || linearUpgrades[2].bought) {
         LEgain = new Decimal(new Decimal(1.5).pow((player.equations.equation2.y.div(20).sub(1))).mul(new Decimal(1.3).pow(player.equations.equation1.x.add(1).log10())))
     }
     if(linearUpgrades[5].bought) {
@@ -636,6 +696,7 @@ function CalculateLengthGain() {
 }
 
 function productionLoop(diff) {
+    player.TimeTillReset = player.TimeTillReset.sub(new Decimal(1).mul(diff))
     player.points = player.points.add(player.pointsPerSec.mul(diff))
     player.pointsPerSec = CalculatePointGain()
     player.tpoints = player.tpoints.add(player.pointsPerSec.mul(diff))

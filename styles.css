@@ -393,6 +393,31 @@ body.light {
     margin-bottom: 5px;
 }
 
+#softcaptab {
+    width: 150px;
+    height: 50px;
+    background-color: rgba(43, 43, 43, 0.801);
+    color: rgb(135, 135, 135);
+    border: 1px solid rgb(78, 78, 78);
+    display: none;
+}
+
+#softcaptab.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#LEs,
+#Ps {
+    display: none;
+}
+
+#LEs.show,
+#Ps.show {
+    display: block;
+}
+
 #Save-notification {
     position: absolute;
     right: 0;
@@ -406,7 +431,6 @@ body.light {
 }
 
 #Save-notification.save {
-    display: block;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -615,6 +639,14 @@ body.light {
     background-color: rgb(175, 138, 4);
 }
 
+.Challenge.beatable {
+    background-color: rgb(30, 135, 135);
+}
+
+.Challenge.beatable:hover {
+    background-color: rgba(0, 142, 140, 0.9);
+}
+
 .Challenge-completed {
     width: 300px;
     height: 200px;
@@ -685,14 +717,13 @@ body.light {
     padding: 5px;
     background-color: rgba(14, 203, 58, 0.801);
     color: white;
-    display: flex;
     justify-content: center;
     align-items: center;
     display: none;
 }
 
 #Polygons-tab.show {
-    display: block;
+    display: flex;
 }
 
 #polygoncanvas {
@@ -777,6 +808,10 @@ body.light {
     align-items: center;
     flex-wrap: wrap;
     background-color: rgba(125, 125, 125, 0.855);
+}
+
+.buyable.available {
+    background-color: rgb(61, 65, 117);
 }
 
 #Height,

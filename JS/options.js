@@ -33,5 +33,6 @@ function TurnBuildingAutomation(i) {
 let alertcontent = false
 
 function AlertButton() {
+    HardReset()
     alertcontent = true
 }
