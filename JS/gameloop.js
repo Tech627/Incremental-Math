@@ -149,7 +149,7 @@ function UpdateGUI() {
         linearUpgrades[0].eff = player.LinearEssence.add(1).mul(4)
         linearUpgrades[4].eff = player.points.add(1).log10().sqrt().add(1)
         linearUpgrades[5].eff = player.LinearEssence.add(1).log10().div(5).add(1)
-        linearUpgrades[9].eff = buildings[0].amount.add(1).div(5).add(buildings[1].amount.add(1).div(5)).add(buildings[2].amount.add(1).div(5))
+        linearUpgrades[9].eff = buildings[0].amount.add(1).div(5).add(buildings[1].amount.add(1).div(5)).add(buildings[2].amount.add(1).div(5)).add(1)
         linearUpgrades[10].eff = player.LinearEssence.add(1).sqrt().mul(250)
         linearUpgrades[0].cost = new Decimal(1)
         linearUpgrades[1].cost = new Decimal(1)
@@ -273,6 +273,9 @@ function UpdateGUI() {
             document.getElementById("LinearReset").textContent = "Reset for " + format(CalculateLEgain()) + " Linear Essence"
         }
     }
+    if(lockedlu3reset == "Error") {
+        lockedlu3reset = false
+    }
     if(linearUpgrades[2].bought && !lockedlu3reset) {
         player.Linearup3reset = true
     }
@@ -371,18 +374,24 @@ function UpdateGUI() {
     if(player.polygons.dimensions.gte(5)) {
         document.getElementById("V-axis").classList.add("show")
     }
-    document.getElementById("polygon-buy").innerHTML = "Buy 1 regular polygon. <br> Cost: " + format(player.polygons.buyable1.cost) + " points"
-    document.getElementById("dimension-buy").innerHTML = "Increase the dimensions your regular polygon is in by 1. <br> Cost: " + format(player.polygons.buyable2.cost)
+    if(player.polygons.amount.eq(1)) {
+        document.getElementById("Polygon-amount").textContent = "Your regular polytope currently has " + player.polygons.sides + " sides."
+    }
+    if(player.polygons.amount.gt(1)) {
+        document.getElementById("Polygon-amount").textContent = "Your regular polytopes currently has " + player.polygons.sides + " sides."
+    }
+    document.getElementById("polygon-buy").innerHTML = "Buy 1 regular polytope. <br> Cost: " + format(player.polygons.buyable1.cost) + " points"
+    document.getElementById("dimension-buy").innerHTML = "Increase the dimensions your regular polytope is in by 1. <br> Cost: " + format(player.polygons.buyable2.cost)
         + " Linear Essence"
-    document.getElementById("Polygon-dimension").textContent = "Your regular polygon is in the " + player.polygons.dimensions + "-th dimension."
-    document.getElementById("Regular-polygons").textContent = "You have " + format(player.polygons.amount) + " regular polygons."
+    document.getElementById("latex-equation").textContent = player.polygons.dimensions
+    document.getElementById("Regular-polygons").textContent = "You have " + format(player.polygons.amount) + " regular polytopes."
     player.polygons.eff1 = player.polygons.length
     player.polygons.eff2 = player.polygons.length.div(50).add(0.98)
     player.polygons.eff3 = player.polygons.eff2.div(100).add(0.99)
     player.polygons.eff4 = player.polygons.eff3.div(150).add(0.993)
     player.polygons.eff5 = player.polygons.eff4.div(200).add(0.995)
     document.getElementById("Lenght").textContent = "Your length boosts your points by " + format(player.polygons.eff1) + "x"
-    document.getElementById("Length-persec").textContent = "(You are increasing the length by +" + format(CalculateLengthGain()) + "/sec)"
+    document.getElementById("Length-persec").textContent = "(You are increasing each side by +" + lengthFormat(CalculateLengthGain()) + "/sec)"
     document.getElementById("Width").textContent = "Your width boosts your points by " + format(player.polygons.eff2) + "x"
     document.getElementById("Height").textContent = "Your height boosts your points by " + format(player.polygons.eff3) + "x"
     document.getElementById("W-axis").textContent = "Your w-axis boosts your points by " + format(player.polygons.eff4) + "x"
@@ -496,7 +505,7 @@ function UpdateStyles() {
     }
     for(let i = 0; i < 6; i++) {
         let lc = linearChallenges[i]
-        if(player.points.gte(lc.goal)) {
+        if(player.points.gte(lc.goal) && lc.inChal) {
             document.getElementById("Challenge" + (i + 1)).classList.add("beatable")
             document.getElementById("Challenge" + (i + 1)).classList.remove("Challenge-running")
         }

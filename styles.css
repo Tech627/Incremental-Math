@@ -781,6 +781,18 @@ body.light {
     visibility: hidden;
 }
 
+#Polygon-dimension {
+    width: 260px;
+    text-align: center;
+    font-size: 18px;
+}
+
+#latex-equation {
+    font-size: 11px;
+    position: absolute;
+    right: 102;
+}
+
 #Polygon-boosts.show {
     visibility: visible;
 }
@@ -824,4 +836,73 @@ body.light {
 #W-axis.show,
 #V-axis.show {
     display: block;
+}
+
+#Tangent-tab {
+    width: 150px;
+    height: 30px;
+    padding: 5px;
+    background-color: rgba(14, 203, 58, 0.801);
+    color: white;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+#Power-of-pi {
+    width: 300px;
+    position: absolute;
+    top: 10;
+    left: 0;
+    margin-left: 200px;
+    text-align: center;
+}
+
+#Tangent {
+    width: 500px;
+    position: absolute;
+    top: 10;
+    left: 50%;
+    margin-left: -250px;
+    text-align: center;
+}
+
+#Equation-of-Tangent {
+    width: 300px;
+    position: absolute;
+    top: 10;
+    right: 0;
+    margin-right: 200px;
+    text-align: center;
+}
+
+#Tangent-upgrades {
+    width: 500px;
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+}
+
+#Tus {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+}
+
+.Tup {
+    width: 250px;
+    height: 115px;
+    background-color: rgb(163, 163, 163);
+    font-size: 14px;
+    padding: 5px;
+}
+
+.Tup:hover {
+    background-color: rgb(145, 128, 128);
+    cursor: pointer;
+}
+
+#EoT-boost {
+    font-size: 13px;
 }

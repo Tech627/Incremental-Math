@@ -215,8 +215,8 @@
                     </div>
                     <div class="Achv" id="Achv-15">
                         <div id="achv-desc">
-                            <div id="achv-name"> <strong> Polygon problems </strong> </div>
-                            Unlock Polygons
+                            <div id="achv-name"> <strong> Polytope problems </strong> </div>
+                            Unlock Polytopes
                         </div>
                     </div>
                 </div>
@@ -224,19 +224,19 @@
                     <div class="Achv" id="Achv-16">
                         <div id="achv-desc">
                             <div id="achv-name"> <strong> The polygon power </strong> </div>
-                            Start increasing length in polygon
+                            Start increasing length in polytope
                         </div>
                     </div>
                     <div class="Achv" id="Achv-17">
                         <div id="achv-desc">
                             <div id="achv-name"> <strong> Dimensions? </strong> </div>
-                            Increase the dimension polygon is in
+                            Increase the dimension polytope is in
                         </div>
                     </div>
                     <div class="Achv" id="Achv-18">
                         <div id="achv-desc">
                             <div id="achv-name"> <strong> This is quite challenging </strong> </div>
-                            Reach the 2nd polygon boost
+                            Reach the 2nd polytope boost
                         </div>
                     </div>
                     <div class="Achv" id="Achv-19">
@@ -248,7 +248,7 @@
                     <div class="Achv" id="Achv-20">
                         <div id="achv-desc">
                             <div id="achv-name"> <strong> Useless boost </strong> </div>
-                            Reach the 5th polygon boost
+                            Reach the 5th polytope boost
                         </div>
                     </div>
                 </div>
@@ -436,7 +436,8 @@
             <button class="subtab-btn" id="sub-tab"> Linear Upgrades </button>
             <button class="subtab-btn" id="sub-tab"> Linear Equation </button>
             <button class="subtab-btn" id="Chals-tab"> Linear Challenges </button>
-            <button class="subtab-btn" id="Polygons-tab"> Polygons </button>
+            <button class="subtab-btn" id="Polygons-tab"> Polytopes </button>
+            <button class="subtab-btn" id="Tangent-tab"> Tangent </button>
         </div>
         <div class="sub-content">
             <div class="container">
@@ -508,7 +509,7 @@
                         </button>
                         <button class="Lup-cost" id="lup-cost12" onclick="BuyLup(12)">
                             <div id="lup-name"> [Polygonial power] </div>
-                            <div id="lup-desc12"> Unlock Polygons </div>
+                            <div id="lup-desc12"> Unlock Polytopes </div>
                             <div id="lup-cost12"> Cost: 100,000 Linear Essence </div>
                         </button>
                     </div>
@@ -611,26 +612,26 @@
                 style="position: absolute; border: 2px solid white; left: 50%; top: 50%; margin-left: -200px; margin-top: 15px;"
                 id="polygoncanvas"></canvas>
                 <div id="Buyables">
-                    <div id="Regular-polygons"> You have 0 regular polygons. </div> 
+                    <div id="Regular-polygons"> You have 0 regular polytopes. </div> 
                     <button class="buyable" id="polygon-buy" onclick="BuyBuyable1()">
-                        Buy 1 regular polygon.
+                        Buy 1 regular polytope.
                         <br> Cost: 5e55 Points
                     </button>
-                    <div id="Polygon-dimension"> Your regular polygon is in the 2nd dimension. </div> 
+                    <div id="Polygon-dimension"> P ⊂ ℝ <span id="latex-equation"> 2 </span></div> 
                     <button class="buyable" id="dimension-buy" onclick="BuyBuyable2()">
-                        Increase the dimensions your regular polygon is in by 1.
+                        Increase the dimensions your regular polytope is in by 1.
                         <br> Cost: 1,000,000 Linear Essence
                     </button>
                 </div>
-                <div id="Polygon-amount"> Your regular polygon currently has 3 sides. </div> 
+                <div id="Polygon-amount"> Your regular polytope currently has 3 sides. </div> 
                 <div class="text-center pt-3" id="polygon-info">
-                    <div id="Polygon-req"> You need to reach 1e56 Points and 250,000 LE to create your first polygon. </div>
+                    <div id="Polygon-req"> You need to reach 1e56 Points and 250,000 LE to create your first polytope. </div>
                 </div> 
                 <div class="text-center pt-4" id="Polygon-boosts">
-                    <div id="Polygon-boost"> Polygon boosts: </div>
+                    <div id="Polygon-boost"> Polytope boosts: </div>
                     <div id="p-boost1"> Unlock 3 more upgrades in upgrades tab. </div>
                     <div id="p-boost2"> Unlock 2 more linear challenges. </div>
-                    <div id="p-boost3"> Points get boosted based on regular polygons.
+                    <div id="p-boost3"> Points get boosted based on regular polytopes.
                         <br> Currently: 1x boost    
                     </div>
                     <div id="p-boost4"> Your Linear Essence gets boosted based on w-axis.
@@ -642,13 +643,62 @@
                 </div>
                 <div class="text-center" id="Dimensions"> 
                     <div id="Length-amt"> Each side is 1 attometer long. (length) </div> 
-                    <div class="text-secondary h6" id="Length-persec"> (You are increasing the Length by +0/sec) </div>
+                    <div class="text-secondary h6" id="Length-persec"> (You are increasing each side by +0/sec) </div>
                     <div id="Dimension-boosts"> Dimension boosts: </div>
                     <div id="Lenght"> Your length boosts Points by 1x. </div>
                     <div id="Width"> Your width boosts Points by 1x. </div>
                     <div id="Height"> Your height boosts Points by 1x. </div>
                     <div id="W-axis"> Your w-axis boosts Points by 1x. </div>
                     <div id="V-axis"> Your v-axis boosts Points by 1x. </div> 
+                </div>
+            </div>
+        </div>
+        <div class="sub-content">
+            <div class="container">
+                <div id="Power-of-pi">
+                    <div id="pi-power"> Your pi in the circle is at 10% power. </div>
+                    <div id="pi-numbers"> Your pi has 1 number after comma. </div>
+                    <div class="pi-milestones">
+                        <div class="milestone">
+                            <div id="pim-name"> [] </div>
+                            <div id="pim-desc">  </div>
+                            <div id="pim-req"> Req: 3 numbers after comma </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="Tangent">
+                    <div id="Tangent-length"> Your Tangent length is 1 centimeter. </div>
+                    <div class="text-center pt-2" id="Tangent-upgrades">
+                        <div class="container" id="Tus">
+                            <div class="Tup">
+                                <div id="Tup-name"> [To Circle and Beyond] </div>
+                                <div id="Tup-desc"> Increase the pi power by +10% (cap at 100%) </div>
+                                <div id="Tup-level"> 0/9 Level </div>
+                                <div id="Tup-cost1"> Cost: 5 Circle fragments </div>
+                            </div>
+                            <div class="Tup">
+                                <div id="Tup-name"> [Tangental Problems] </div>
+                                <div id="Tup-desc"> Unlock the abillity to increase x in equation of tangent </div>
+                                <div id="Tup-cost2"> Cost: 20 Circle fragments </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="Equation-of-Tangent">
+                    <div class="h5" id="EoT"> <strong> Equation of Tangent </strong> </div>
+                    <div class="h4" id="EoT-eq"> y = mx + c </div>
+                    <div id="EoT-vars">
+                        <div id="EoT-y"> y = 1 </div>
+                        <div id="EoT-m"> m = 1 </div>
+                        <div id="EoT-x"> x = 0 </div>
+                        <div id="EoT-c"> c = 1 </div>
+                    </div>
+                    <div class="text-secondary" id="EoT-boost"> Your Equation of Tangent gives a 1x boost to points, buildings, y boost. Each factorial of 10
+                        your x from 1st equation gets divided by 16. </div>
+                    <div id="EoT-c-buyer">
+                        Increase c by 1.
+                        <button class="btn btn-secondary" id="EoT-c-btn"> Cost: 10 Circle fragments </button>
+                    </div>
                 </div>
             </div>
         </div>

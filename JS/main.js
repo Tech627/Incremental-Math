@@ -226,7 +226,9 @@ function BuyLup(i) {
 function LinearEssenceReset(chal = false) {
     if(player.LEgain.gte(1) && player.TimeTillReset.lte(0) || chal) {
         player.TimeTillReset = new Decimal(5)
-        player.LinearEssence = player.LinearEssence.add(player.LEgain)
+        if(!chal) {
+            player.LinearEssence = player.LinearEssence.add(player.LEgain)
+        }
         player.points = new Decimal(0)
         player.pointsPerSec = new Decimal(0)
         for(let i = 0; i < 3; i++) {
@@ -244,7 +246,7 @@ function LinearEssenceReset(chal = false) {
                 u.bought = false
                 u.cost = new Decimal(20000)
                 u.eff = new Decimal(1)
-                if(linearUpgrades[2].bought) {
+                if(linearUpgrades[2].bought && !linearChallenges[1].inChal) {
                     upgrades[2].bought = true
                     upgrades[5].bought = true
                 }

@@ -24,6 +24,7 @@ function Save() {
             saveitems("amount" + (i + 1), b.amount)
             saveitems("eff" + (i + 1), b.eff)
             saveitems("cost" + (i + 1), b.cost)
+            saveitems("Building-automation" + (i + 1), b.automation)
         }
         saveitems("tbuildings", player.tbuildings)
         for(let i = 0; i < 9; i++) {
@@ -80,6 +81,7 @@ function Save() {
         saveitems("alertcontent", alertcontent)
         saveitems("LinearResetunl", LinearResetunl)
         saveitems("softcapunl", player.softcapunl)
+        saveitems("lu3reset", lockedlu3reset)
         player.saved = true
         if(player.saved === true) {
             document.getElementById("Save-notification").classList.add("save")
@@ -132,6 +134,7 @@ function Get() {
             b.amount = GetItems("amount" + (i + 1), true)
             b.cost = GetItems("cost" + (i + 1), true)
             b.eff = GetItems("eff" + (i + 1), true)
+            b.automation = GetItems("Bulding-automation" + (i + 1), false)
         }
         player.tbuildings = GetItems("tbuildings", true)
         for(let i = 0; i < 9; i++) {
@@ -188,6 +191,7 @@ function Get() {
         alertcontent = GetItems("alertcontent", false)
         LinearResetunl = GetItems("LinearResetunl", false)
         player.softcapunl = GetItems("softcapunl", false)
+        lockedlu3reset = GetItems("lu3reset", false)
         fixSave() 
     } else {
         Save()
